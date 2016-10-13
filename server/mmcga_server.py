@@ -20,7 +20,7 @@ from utils.utils import printd
 #### FUNCTIONS  ####
 
 def callback(ch, method, properties, body):
-    print("Got: " + str(body))
+    printd("Msg: " + str(body))
 
 #### MAIN       ####
 

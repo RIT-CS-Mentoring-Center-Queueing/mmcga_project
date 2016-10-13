@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 ##
 ## File:    utils.py
 ##
@@ -20,7 +19,7 @@ def printd(msg):
     :param: msg Message to print
     '''
     if (DEBUG_MACRO):
-        print(msg)
+        print("DEBUG: " + msg)
 
 def read_file(fd):
     '''
