@@ -20,10 +20,18 @@ if [ "$1" != "start" ] && [ "$1" != "stop" ] && [ "$1" != "restart" ]; then
 fi
 
 # Manage the 
-./utils/rmq.sh "$1"
+./server/utils/rmq.sh "$1"
+
+# Rabbit MQ server command failed
+if [ "$?" -ne 0 ]; then
+    echo "ERROR: Rabbit MQ Server Failure!"
+    exit 3
+fi
 
 # start our python server/request handling system that reads off of queues
 # managed by the RabbitMQ server
 if [ "$1" = "start" ]; then
     /usr/bin/python3 server/mmcga_server.py
+    # TODO Testing: I don't want RabbitMQ running on my box all the time
+    ./server/utils/rmq.sh "stop"
 fi

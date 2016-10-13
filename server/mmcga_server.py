@@ -7,7 +7,13 @@
 ## Description: Main server program for the MMCGA Project
 ##
 
+# Python libraries
 import pika
+import sys
+
+# project libraries
+from utils.macros import *
+from utils.utils import printd
 
 #### GLOBALS    ####
 
@@ -22,7 +28,7 @@ def main():
     '''
     Main execution point of the program
     '''
-    print("Starting MMCGA Server...")
+    print("+ Starting MMCGA Server...")
     # establish connection to server
     socket = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = socket.channel()
@@ -34,8 +40,14 @@ def main():
         queue="hello",
         no_ack=True);
     print("Waiting for messages. CTRL-C to exit")
-    # busy loop that waits for messages to come in; will clean up itself?
-    channel.start_consuming()
+
+    # busy loop that waits for messages to come in; clean-up on ckill
+    try:
+        channel.start_consuming()
+    except KeyboardInterrupt:
+        print("\n- Stopping MMCGA Server...")
+        channel.stop_consuming()
+    socket.close()
 
 if __name__ == "__main__":
     main()

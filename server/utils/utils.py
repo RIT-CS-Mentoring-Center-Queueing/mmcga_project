@@ -7,11 +7,20 @@
 ## Description: Python file that contains basic utility functions
 ##
 
+from utils.macros import *
 import sys
 
 #### GLOBALS    ####
 
 #### FUNCTIONS  ####
+
+def printd(msg):
+    '''
+    Prints debugging messages if debugging is enabled
+    :param: msg Message to print
+    '''
+    if (DEBUG_MACRO):
+        print(msg)
 
 def read_file(fd):
     '''
