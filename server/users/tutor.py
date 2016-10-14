@@ -7,6 +7,8 @@
 ## This is someone who can answer questions
 ##
 
+from user import User
+
 class Tutor(User):
     '''
     Tutor user class
@@ -29,7 +31,7 @@ class Tutor(User):
         '''
         Converts user to a string equivalent
         '''
-        return "Tutor " + super().__str__()self.name
+        return "Tutor (" + self.title + ")" + super().__str__()
 
     def busy_status(self):
         '''

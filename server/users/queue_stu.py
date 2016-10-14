@@ -8,6 +8,8 @@
 ## could be one per Tutor later on
 ##
 
+from student import Student
+
 class QueueStu:
     '''
     Student Queue class
@@ -55,7 +57,7 @@ class QueueStu:
         '''
         if not(self.is_empty()):
             return self.queue[0]
-        else
+        else:
             return None
 
     def pop(self):
@@ -65,7 +67,7 @@ class QueueStu:
         '''
         if not(self.is_empty()):
             return self.queue.pop(0)
-        else
+        else:
             return None
 
     def push(self, stu):
@@ -89,14 +91,51 @@ class QueueStu:
         '''
         Purges a student from the queue (at any position in the queue)
         :param: stu Student to purge
-        :return: UID of the student or None if there's an error
+        :return: Student purged or None if there's an error
         '''
-        uid = None
+        ret = None
         if (type(stu) is Student):
             for i in range(0, self.len()):
                 if (self.queue[i] == stu):
-                    uid = stu.uid
+                    ret = stu
                     break
-            if (uid != None)
-                self.queue.pop(stu)
-        return uid
+            if (ret != None):
+                self.queue.pop(i)
+        return ret
+
+#### MAIN       ####
+
+def main():
+    '''
+    Test program for this class
+    '''
+    stu0 = Student("Alice")
+    stu1 = Student("Bob")
+    stu2 = Student("Oscar")
+    tut0 = Tutor("Tutor", "SLI")
+    queue = QueueStu("Primary Queue");
+    print("===== Push commands =====")
+    print(queue.len() == 0)
+    print(queue.is_empty() == True)
+    queue.push(stu0)
+    queue.push(stu1)
+    queue.push(stu2)
+    queue.push(tut0)    # This should not be pushed
+    print(queue.len() == 3)
+    print(queue.is_empty() == False)
+    print(str(queue))
+    print("===== Pop/Top commands =====")
+    print(queue.top())
+    print(queue.top() == stu0)
+    print(queue.pop() == stu0)
+    print(str(queue))
+    print("===== Purge commands =====")
+    print(queue.purge(tut0) == None)
+    print(queue.purge(stu2) == stu2)
+    print(queue.purge_all() == None)
+    print(str(queue))
+
+if __name__ == "__main__":
+    # package only used for testing purposes
+    from tutor import Tutor
+    main()

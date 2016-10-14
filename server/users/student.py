@@ -7,6 +7,8 @@
 ## This is a user who asks questions.
 ##
 
+from user import User
+
 class Student(User):
     '''
     Student user class
@@ -23,4 +25,4 @@ class Student(User):
         '''
         Converts user to a string equivalent
         '''
-        return "Student " + super().__str__()self.name
+        return "Student " + super().__str__()
