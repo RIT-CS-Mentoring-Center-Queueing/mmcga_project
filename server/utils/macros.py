@@ -14,4 +14,9 @@ DEBUG_MACRO = True
 # Host name of the server
 SERVER_HOST = "localhost"
 
+# Various semi-official tutor titles
+TUTOR_TA  = "TA"
+TUTOR_SLI = "SLI"
+TUTOR_TUT = "Tutor"
 
+# TODO Message commands/interface with the app

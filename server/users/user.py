@@ -29,3 +29,16 @@ class User:
         Converts user to a string equivalent
         '''
         return self.name + ", UID: " + self.UID
+
+    def __eq__(self, user):
+        '''
+        Checks if two users are the same
+        :param: user The other user
+        '''
+        return self.uid == user.uid
+
+    def __hash__(self):
+        '''
+        Returns the hash code of a user
+        '''
+        return self.uid
