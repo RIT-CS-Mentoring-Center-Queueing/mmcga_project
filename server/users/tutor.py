@@ -8,6 +8,7 @@
 ##
 
 from user import User
+from student import Student
 
 class Tutor(User):
     '''
@@ -44,10 +45,13 @@ class Tutor(User):
         '''
         A tutor helps a student
         :param: stu Student to help
+        :return: UID of student that was just helped or None
         '''
         if (type(stu) is Student):
             self.helped.append(stu.uid)
             self.busy = True
+            return stu.uid
+        return None
 
     def done(self):
         '''

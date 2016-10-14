@@ -35,12 +35,16 @@ class User:
         Checks if two users are the same
         :param: user The other user
         '''
-        if not(isinstance(user, User)):
-            return False
-        return self.uid == user.uid
+        # can check against UIDs directly
+        if (isinstance(user, str)):
+            return self.uid == user
+        # other types are not allowed
+        if (isinstance(user, User)):
+            return self.uid == user.uid
+        return False
 
     def __hash__(self):
         '''
         Returns the hash code of a user
         '''
-        return self.uid
+        return hash(self.uid)
