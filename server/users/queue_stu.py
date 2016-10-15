@@ -73,10 +73,10 @@ class QueueStu:
     def push(self, stu):
         '''
         Adds a student to the back of the queue
-        :param: stu Student to add
+        :param: stu Student object or the name of a Student to add
         '''
-        # some type checking protections have been added to keep tutors or
-        # others from being added to the queue
+        if (type(stu) is str):
+            stu = Student(stu)
         if (type(stu) is Student):
             self.queue.append(stu)
             self.lt_count += 1
@@ -90,14 +90,15 @@ class QueueStu:
     def purge(self, stu):
         '''
         Purges a student from the queue (at any position in the queue)
-        :param: stu Student to purge
+        :param: stu Student object or Student UID to purge
         :return: Student purged or None if there's an error
         '''
         ret = None
-        if (type(stu) is Student):
+        if ((type(stu) is Student) or (type(stu) is str)):
             for i in range(0, self.len()):
+                # equals overloaded to check against UID strings
                 if (self.queue[i] == stu):
-                    ret = stu
+                    ret = self.queue[i]
                     break
             if (ret != None):
                 self.queue.pop(i)
