@@ -32,7 +32,7 @@ class Tutor(User):
         '''
         Converts user to a string equivalent
         '''
-        return "Tutor (" + self.title + ")" + super().__str__()
+        return "Tutor(" + self.title + ") " + super().__str__()
 
     def busy_status(self):
         '''

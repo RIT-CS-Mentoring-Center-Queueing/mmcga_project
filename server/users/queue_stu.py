@@ -31,7 +31,7 @@ class QueueStu:
         '''
         Converts queue to a string equivalent
         '''
-        result = self.name + ":\n"
+        result = "===== " + self.name + " =====\n"
         for stu in self.queue:
             result += str(stu) + "\n"
         return result
