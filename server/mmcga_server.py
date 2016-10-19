@@ -14,10 +14,10 @@ import sys
 # project libraries
 from utils.macros import *
 from utils.utils import printd
-from user.student import Student
-from user.tutor import Tutor
-from user.queue_stu import QueueStu
-from user.queue_tut import QueueTut
+from users.student import Student
+from users.tutor import Tutor
+from users.queue_stu import QueueStu
+from users.queue_tut import QueueTut
 
 #### GLOBALS    ####
 

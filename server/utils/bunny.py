@@ -30,7 +30,10 @@ class Bunny:
         '''
         Constructs a Bunny object, an interface/wrapper for RabbitMQ messaging
         '''
-        # table that connects Users (UIDs) to devices (IPs) bidirectionally
+        # table that tracks connected Users
+        # originally I thought we would need to track User IPs but that's
+        # handled by the RabbitMQ server. This server and user clients just
+        # need to be pointed to look at the correct message queue
         self.uid_dev = {}
         # default RabbitMQ exchange to use for out-going messages
         self.exchange = ""
@@ -44,18 +47,16 @@ class Bunny:
             result += str(key) + " -> " + str(self.uid_dev[key]) + "\n"
         return result
 
-    def register(self, uid, dev_id):
+    def register(self, uid):
         '''
         Adds a user; user connects to the system
         :param: uid User/UID that identifies who we are trying to talk to
-        :param: dev_id ID of the device (IP)
         :return: UID of user registered
         '''
         uid = User.get_uid(uid)
-        # add the connection both ways, in case we need to look up in both
-        # directions quickly
-        self.uid_dev[uid] = dev_id
-        self.uid_dev[dev_id] = uid
+        # add the connection; I don't like using the Python set so I'm going
+        # to leave this as an empty look-up
+        self.uid_dev[uid] = ""
         return uid
 
     def deregister(self, uid):
@@ -64,10 +65,8 @@ class Bunny:
         :param: uid User/UID that identifies who we are trying to talk to
         '''
         uid = User.get_uid(uid)
-        dev_id = self.uid_dev[uid]
         # remove look up in both directions
         del self.uid_dev[uid]
-        del self.uid_dev[dev_id]
         return uid
 
     def send_msg(self, uid, var_tbl):
@@ -82,8 +81,6 @@ class Bunny:
         uid = User.get_uid(uid)
         if not(uid in self.uid_dev):
             return None
-        dev_id = self.uid_dev[uid]
-        
 
         # convert variable table into a JSON string to send over
         json_str = json.dumps(var_tbl)
@@ -94,24 +91,26 @@ class Bunny:
         )
         channel = socket.channel()
         # send information to a specific RabbitMQ queue
-        channel.queue_declare(queue=dev_id)
+        channel.queue_declare(queue=uid)
         # actually submit the message
         channel.basic_publish(exchange=self.exchange,
-            routing_key=dev_id,
+            routing_key=uid,
             body=json_str);
-        printd("Sent msg to: " + uid)
+        printd("Sent msg to " + uid + ":")
+        printd(json_str)
         # close the connection
         socket.close()
         return json_str
 
-    def parse_msg(self, msg):
+    def parse_msg(self, msg_body):
         '''
         Takes a message from a device/RabbitMQ and parses it into a hash table
-        :param: msg RabbitMQ message received from a device/user
+        :param: msg_body RabbitMQ body message received from a device/user
         :return: Dictionary hash table that stores values to received over
                 the network in a packaged way.
         '''
-        pass
+        out_map = {}
+        return out_map
 
 #### MAIN       ####
 
@@ -120,18 +119,14 @@ def main():
     Test program for this class
     '''
     stu0 = Student("Alice")
-    stu0_ip = "1.1.1.1"
     stu1 = Student("Bob")
-    stu1_ip = "1.1.1.42"
     stu2 = Student("Oscar")
-    stu2_ip = "1.6.6.6"
     tut0 = Tutor("Tutor", "SLI")
-    tut0_ip = "127.0.0.1"
     bunny = Bunny()
-    print("Added: " + bunny.register(stu0, stu0_ip))
-    print("Added: " + bunny.register(stu1.uid, stu1_ip))
-    print("Added: " + bunny.register(stu2, stu2_ip))
-    print("Added: " + bunny.register(tut0, tut0_ip))
+    print("Added: " + bunny.register(stu0))
+    print("Added: " + bunny.register(stu1.uid))
+    print("Added: " + bunny.register(stu2))
+    print("Added: " + bunny.register(tut0))
     print(bunny)
     print("Deleted: " + bunny.deregister(stu1))
     print("Deleted: " + bunny.deregister(stu2.uid))
