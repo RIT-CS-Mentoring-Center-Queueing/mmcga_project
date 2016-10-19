@@ -48,3 +48,17 @@ class User:
         Returns the hash code of a user
         '''
         return hash(self.uid)
+
+    @staticmethod
+    def get_uid(uid):
+        '''
+        Extracts a UID out of a User object or UID string; handles implicit
+        typing issues
+        :param: uid UID string or User to extract a UID out of
+        :return: UID string
+        '''
+        if (isinstance(uid, str)):
+            return uid
+        elif (isinstance(uid, User)):
+            return uid.uid
+        return str(uid)

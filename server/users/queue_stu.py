@@ -8,7 +8,7 @@
 ## could be one per Tutor later on
 ##
 
-from student import Student
+from users.student import Student
 
 class QueueStu:
     '''
@@ -138,5 +138,5 @@ def main():
 
 if __name__ == "__main__":
     # package only used for testing purposes
-    from tutor import Tutor
+    from users.tutor import Tutor
     main()

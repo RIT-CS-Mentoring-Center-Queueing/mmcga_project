@@ -9,7 +9,7 @@
 ## available at any one point and may come and go as their shifts end
 ##
 
-from tutor import Tutor
+from users.tutor import Tutor
 
 class QueueTut:
     '''
@@ -189,5 +189,5 @@ def main():
 
 if __name__ == "__main__":
     # package only used for testing purposes
-    from student import Student
+    from users.student import Student
     main()

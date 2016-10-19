@@ -7,7 +7,7 @@
 ## This is a user who asks questions.
 ##
 
-from user import User
+from users.user import User
 
 class Student(User):
     '''

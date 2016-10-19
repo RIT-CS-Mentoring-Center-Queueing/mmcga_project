@@ -7,8 +7,8 @@
 ## This is someone who can answer questions
 ##
 
-from user import User
-from student import Student
+from users.user import User
+from users.student import Student
 
 class Tutor(User):
     '''

@@ -19,7 +19,7 @@ if [ "$1" != "start" ] && [ "$1" != "stop" ] && [ "$1" != "restart" ]; then
     exit 2
 fi
 
-# Manage the 
+# Manage the RabbitMQ server
 ./server/utils/rmq.sh "$1"
 
 # Rabbit MQ server command failed
