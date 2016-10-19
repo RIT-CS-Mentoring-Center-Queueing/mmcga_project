@@ -22,10 +22,10 @@ def main():
     socket = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = socket.channel()
     # send information to a specific RabbitMQ queue
-    channel.queue_declare(queue="hello")
+    channel.queue_declare(queue="Default Queue")
     # actually submit the message
     channel.basic_publish(exchange="",
-        routing_key="hello",
+        routing_key="Default Queue",
         body="Hello World");
     print("SENT!")
     # close the connection

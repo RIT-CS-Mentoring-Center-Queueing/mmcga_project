@@ -109,8 +109,11 @@ class Bunny:
         :return: Dictionary hash table that stores values to received over
                 the network in a packaged way.
         '''
-        out_map = {}
-        return out_map
+        json_str = str(msg_body)
+        # strip RabbitMQ's weird body tag information: b'<JSON>'
+        json_str = json_str[2:-1]
+        # return dictionary map
+        return json.loads(json_str)
 
 #### MAIN       ####
 
@@ -141,6 +144,8 @@ def main():
     test_vars_json = json.dumps(test_vars)
     print(bunny.send_msg(stu0, test_vars) == test_vars_json)
     print(bunny.send_msg(stu1, test_vars) == None)
+    print("Parse JSON to Python dictionary:")
+    print(str(bunny.parse_msg("b'" + test_vars_json + "'")))
 
 if __name__ == "__main__":
     # package only used for testing purposes

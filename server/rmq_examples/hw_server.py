@@ -27,10 +27,10 @@ def main():
     channel = socket.channel()
     # send information to a specific RabbitMQ queue; building this queue for
     # the first time
-    channel.queue_declare(queue="hello")
+    channel.queue_declare(queue="Default Queue")
     # actually submit the message
     channel.basic_consume(callback,
-        queue="hello",
+        queue="Default Queue",
         no_ack=True);
     print("Waiting for messages. CTRL-C to exit")
     # busy loop that waits for messages to come in; will clean up itself?
