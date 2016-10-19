@@ -37,6 +37,17 @@ fi
 
 if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 3 ]; then
     echo "###################### TEST 3: Bunny Class ######################"
+    # start the RabbitMQ server for this test
+    ./utils/rmq.sh "start"
+    # Rabbit MQ server command failed
+    if [ "$?" -ne 0 ]; then
+        echo "ERROR: Rabbit MQ Server Failure!"
+        exit 42
+    fi
+
     python3 -m utils.bunny
+
+    # kill the RabbitMQ server
+    ./utils/rmq.sh "stop"
 fi
 echo "######################  END TESTS  ######################"
