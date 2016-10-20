@@ -55,10 +55,10 @@ class User:
         Extracts a UID out of a User object or UID string; handles implicit
         typing issues
         :param: uid UID string or User to extract a UID out of
-        :return: UID string
+        :return: UID string or None
         '''
         if (isinstance(uid, str)):
             return uid
         elif (isinstance(uid, User)):
             return uid.uid
-        return str(uid)
+        return None

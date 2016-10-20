@@ -36,6 +36,12 @@ class QueueStu:
             result += str(stu) + "\n"
         return result
 
+    def __contains__(self, user):
+        '''
+        Checks if user is in the queue
+        '''
+        return user in self.queue
+
     def len(self):
         '''
         Returns the length of the queue
@@ -133,6 +139,8 @@ def main():
     print("===== Purge commands =====")
     print(queue.purge(tut0) == None)
     print(queue.purge(stu2) == stu2)
+    print(not(stu2 in queue))
+    print(stu1 in queue)
     print(queue.purge_all() == None)
     print(str(queue))
 

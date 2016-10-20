@@ -38,6 +38,12 @@ class QueueTut:
             result += str(self.free_queue[key]) + "\n"
         return result
 
+    def __contains__(self, user):
+        '''
+        Checks if user is in the queue
+        '''
+        return (user in self.busy_queue) or (user in self.free_queue)
+
     def len(self):
         '''
         Returns the length of the queue/number of tutors currently available
@@ -71,6 +77,7 @@ class QueueTut:
         Add a tutor to the queue; presumably they just went on duty
         :param: tut Tutor or the name of a new Tutor to add to the Tutor queue
         :param: title Optional argument gives a Tutor a title
+        :return: Tutor removed or None if there's an error
         '''
         # if it's a name, build out a new Tutor object, then add it in
         if (type(tut) is str):
@@ -80,6 +87,7 @@ class QueueTut:
                 self.busy_queue[tut.uid] = tut
             else:
                 self.free_queue[tut.uid] = tut
+        return tut
 
     def remove(self, tut):
         '''
@@ -183,6 +191,9 @@ def main():
     print("===== Purge commands =====")
     print(queue.remove(stu0) == None)
     print(queue.remove(tut2) == tut2)
+    print(not(tut2 in queue))
+    print(tut1 in queue)
+    print(tut0 in queue)
     print(str(queue))
     print(queue.purge_all() == None)
     print(str(queue))
