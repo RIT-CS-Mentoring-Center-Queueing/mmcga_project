@@ -14,16 +14,14 @@ import sys
 # project libraries
 from utils.macros import *
 from utils.utils import printd
-from users.student import Student
-from users.tutor import Tutor
-from users.queue_stu import QueueStu
-from users.queue_tut import QueueTut
+from utils.bunny import Bunny.parse_msg
+# TODO RETHINK WITH NEW QUEUE MANAGER
+#from users.student import Student
+#from users.tutor import Tutor
+#from users.queue_stu import QueueStu
+#from users.queue_tut import QueueTut
 
 #### GLOBALS    ####
-
-# Student and Tutor queues that manage the mentoring center
-stu_queue = None
-tut_queue = None
 
 #### FUNCTIONS  ####
 
@@ -38,28 +36,18 @@ def msg_callback(ch, method, properties, body):
     '''
     # perform actions based on message received
     printd("Msg: " + str(body))
+    msg_map = Bunny.parse_msg(body)
+    method = msg_map[MSG_PARAM_METHOD]
     # "registration" commands
     if (method == MSG_TUT_ENTER):
-        name = "TODO"
-        title = "TODO"
-        tut_queue.add(name, title)
-        # TODO send return message to client with UID
+        name = msg_map[MSG_PARAM_USER_NAME]
+        queue_manager.register_stu(name)
     elif (method == MSG_TUT_LEAVE):
-        # TODO get uid from message
-        uid = "TODO"
-        tut_queue.remove(uid)
+        name = msg_map[MSG_PARAM_USER_NAME]
+        title = msg_map[MSG_PARAM_USER_TITLE]
+        queue_manager.register_tut(name, title)
     else:
         printd("Unknown message: " + str(body))
-
-def init():
-    '''
-    Initializes our run-time variables
-    '''
-    # I believe that these need to be globalvariables in order for themessage
-    # handlers/callback functions to manipulate the queues
-    global stu_queue, tut_queue
-    stu_queue = QueueStu(SERVER_QUEUE)
-    tut_queue = QueueTut();
 
 #### MAIN       ####
 
@@ -67,11 +55,10 @@ def main():
     '''
     Main execution point of the program
     '''
-    # initialize our run-time variables
-    init()
 
     # establish connection to server
     print("+ Starting MMCGA Server...")
+    queue_manager = QueueManager()
     socket = pika.BlockingConnection(pika.ConnectionParameters(SERVER_HOST))
     channel = socket.channel()
     # send information to a specific RabbitMQ queue; building this queue for
