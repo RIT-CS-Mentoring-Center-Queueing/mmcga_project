@@ -75,33 +75,38 @@ class Bunny:
         socket.close()
         return json_str
 
-    def register(self, uid):
+    def register(self, user):
         '''
         Adds a user; user connects to the system
-        :param: uid User/UID that identifies who we are trying to talk to
-        :return: UID of user registered
+        :param: user User object being created
+        :return: User object added or None if failure
         '''
-        uid = User.get_uid(uid)
-        # add the connection; I don't like using the Python set so I'm going
-        # to leave this as an empty look-up
-        self.uid_dev[uid] = ""
+        if not(isinstance(user, User)):
+            return None
+        uid = User.get_uid(user)
+        # hash on the uid
+        self.uid_dev[uid] = user
         # send a message so that the client can pick up their UID
         var_tbl = {}
         var_tbl[MSG_PARAM_METHOD] = MSG_USER_ENTER
         var_tbl[MSG_PARAM_USER_UID] = uid
-        var_tbl[MSG_PARAM_USER_NAME] = "user_name"
+        var_tbl[MSG_PARAM_USER_NAME] = user.name
         self.__send_msg(UID_BOOTSTRAP_QUEUE, var_tbl)
-        return uid
+        return user
 
     def deregister(self, uid):
         '''
         Removes a user; user disconnects to the system
-        :param: uid User/UID that identifies who we are trying to talk to
+        :param: uid User/UID that identifies who we are removing
+        :return: UID removed or None if failure
         '''
         uid = User.get_uid(uid)
         # remove look up in both directions
-        del self.uid_dev[uid]
-        return uid
+        if ((type(uid) is str) and (uid in self.uid_dev)):
+            del self.uid_dev[uid]
+            return uid
+        # failure; UID is not a string or in the table
+        return None
 
     def send_msg(self, uid, var_tbl):
         '''
@@ -137,18 +142,18 @@ def main():
     '''
     Test program for this class
     '''
+    bunny = Bunny()
     stu0 = Student("Alice")
     stu1 = Student("Bob")
     stu2 = Student("Oscar")
     tut0 = Tutor("Tutor", "SLI")
-    bunny = Bunny()
-    print("Added: " + bunny.register(stu0))
-    print("Added: " + bunny.register(stu1.uid))
-    print("Added: " + bunny.register(stu2))
-    print("Added: " + bunny.register(tut0))
+    print("Added: " + str(bunny.register(stu0)))
+    print("Added: " + str(bunny.register(stu1)))
+    print("Added: " + str(bunny.register(stu2)))
+    print("Added: " + str(bunny.register(tut0)))
     print(bunny)
-    print("Deleted: " + bunny.deregister(stu1))
-    print("Deleted: " + bunny.deregister(stu2.uid))
+    print("Deleted: " + str(bunny.deregister(stu1)))
+    print("Deleted: " + str(bunny.deregister(stu2.uid)))
     print(bunny)
 
     # send some stuff to RabbitMQ

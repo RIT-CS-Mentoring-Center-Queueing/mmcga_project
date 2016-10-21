@@ -9,6 +9,7 @@
 
 from users.user import User
 from users.student import Student
+from utils.macros import UID_PREFIX_TUT
 
 class Tutor(User):
     '''
@@ -22,6 +23,9 @@ class Tutor(User):
         :param: title Job title of the Tutor (TA, SLI, etc)
         '''
         super().__init__(name)
+        # identify the type of user in the UID string 
+        self.uid = UID_PREFIX_TUT + self.uid
+        # Give the user a title
         self.title = title
         # indicates if the tutor is available to answer questions
         self.busy = False
@@ -63,3 +67,15 @@ class Tutor(User):
             return self.helped[-1]
         else:
             return None
+
+    @staticmethod
+    def is_tut(uid):
+        '''
+        Checks if a UID or User is a tutor UID
+        :param: uid UID string or User to extract a UID out of
+        :return: True if the UID is a Tutor, False otherwise
+        '''
+        uid = User.get_uid(uid)
+        if (type(uid) is str):
+            return UID_PREFIX_TUT == uid[:len(UID_PREFIX_TUT)]
+        return False

@@ -45,8 +45,9 @@ class QueueManager:
         :param: name Name of the user
         :return: New user object
         '''
-        user = self.stu_queue.push(name)
+        user = Student(name)
         self.bunny.register(user)
+        self.stu_queue.push(user)
         return user
 
     def register_tut(self, name, title="")
@@ -56,55 +57,31 @@ class QueueManager:
         :param: title Optional title of the tutor
         :return: New user object
         '''
-        user = self.tut_queue.add(name, title)
+        user = Tutor(name, title)
         self.bunny.register(user)
+        self.tut_queue.add(user)
         return user
 
     def deregister_user(self, uid)
         '''
         Removes a user from the system
         :param: uid UID of user to remove
-        :return: Removed user or None if failed
+        :return: Removed UID or None if failed
         '''
+        uid = self.bunny.deregister(uid)
         if (uid in self.stu_queue):
-            user = self.stu_queue.purge(uid)
-            self.bunny.deregister(user)
-            return user
+            self.stu_queue.purge(uid)
         elif (uid in self.tut_queue):
-            user = self.tut_queue.purge(uid)
-            self.bunny.deregister(user)
-            return user
-        return None
+            self.tut_queue.purge(uid)
+        return uid
 
 #### MAIN       ####
 
 def main():
     '''
-    Main execution point of the program
+    Test program for this class
     '''
-    # initialize our run-time variables
-    init()
-
-    # establish connection to server
-    print("+ Starting MMCGA Server...")
-    socket = pika.BlockingConnection(pika.ConnectionParameters(SERVER_HOST))
-    channel = socket.channel()
-    # send information to a specific RabbitMQ queue; building this queue for
-    # the first time
-    channel.queue_declare(queue=SERVER_QUEUE)
-    # listen to messages on the primary queue and handle them as need be
-    channel.basic_consume(msg_callback,
-        queue=SERVER_QUEUE,
-        no_ack=True);
-
-    # busy loop that waits for messages to come in; clean-up on ckill
-    print("Waiting for messages. CTRL-C to exit")
-    try:
-        channel.start_consuming()
-    except KeyboardInterrupt:
-        print("\n- Stopping MMCGA Server...")
-        channel.stop_consuming()
-    socket.close()
+    pass
 
 if __name__ == "__main__":
     main()

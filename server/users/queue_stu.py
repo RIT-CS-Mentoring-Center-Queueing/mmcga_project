@@ -9,6 +9,7 @@
 ##
 
 from users.student import Student
+from users.user import User
 
 class QueueStu:
     '''
@@ -36,11 +37,14 @@ class QueueStu:
             result += str(stu) + "\n"
         return result
 
-    def __contains__(self, user):
+    def __contains__(self, uid):
         '''
         Checks if user is in the queue
+        :param: uid User/UID that identifies who we are removing
+        :return: True if the UID is found, False otherwise
         '''
-        return user in self.queue
+        uid = User.get_uid(uid)
+        return uid in self.queue
 
     def len(self):
         '''
@@ -59,7 +63,7 @@ class QueueStu:
     def top(self):
         '''
         Returns a student from the front of the queue
-        :return: Student at the top of the queue or None if empty
+        :return: Student UID at the top of the queue or None if empty
         '''
         if not(self.is_empty()):
             return self.queue[0]
@@ -69,23 +73,25 @@ class QueueStu:
     def pop(self):
         '''
         Removes a student from the front of the queue
-        :return: Student at the top of the queue or None if empty
+        :return: Student UID at the top of the queue or None if empty
         '''
         if not(self.is_empty()):
             return self.queue.pop(0)
         else:
             return None
 
-    def push(self, stu):
+    def push(self, stu_uid):
         '''
         Adds a student to the back of the queue
-        :param: stu Student object or the name of a Student to add
+        :param: stu_uid UID/Student object to add
+        :return: Student UID added or None if there's an error
         '''
-        if (type(stu) is str):
-            stu = Student(stu)
-        if (type(stu) is Student):
-            self.queue.append(stu)
+        stu_uid = User.get_uid(stu_uid)
+        if (Student.is_stu(stu_uid)):
+            self.queue.append(stu_uid)
             self.lt_count += 1
+            return stu_uid
+        return None
 
     def purge_all(self):
         '''
@@ -97,7 +103,7 @@ class QueueStu:
         '''
         Purges a student from the queue (at any position in the queue)
         :param: stu Student object or Student UID to purge
-        :return: Student purged or None if there's an error
+        :return: Student UID purged or None if there's an error
         '''
         ret = None
         if ((type(stu) is Student) or (type(stu) is str)):

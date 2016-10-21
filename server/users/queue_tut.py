@@ -10,6 +10,7 @@
 ##
 
 from users.tutor import Tutor
+from users.user import User
 
 class QueueTut:
     '''
@@ -21,7 +22,10 @@ class QueueTut:
         '''
         Queue constructor
         '''
-        # queue implementation is actually two Python sets
+        # queue implementation is actually two Python dictionaries
+        # these could be sets but I'd prefer to use dictionaries because they
+        # have more functionality. This does mean that the keys are the
+        # also the values (UID -> UID)
         self.busy_queue = {}
         self.free_queue = {}
         self.name = "Tutor Queue"
@@ -38,11 +42,14 @@ class QueueTut:
             result += str(self.free_queue[key]) + "\n"
         return result
 
-    def __contains__(self, user):
+    def __contains__(self, uid):
         '''
         Checks if user is in the queue
+        :param: uid User/UID that identifies who we are removing
+        :return: True if the UID is found, False otherwise
         '''
-        return (user in self.busy_queue) or (user in self.free_queue)
+        uid = User.get_uid(uid)
+        return (uid in self.busy_queue) or (uid in self.free_queue)
 
     def len(self):
         '''
@@ -62,85 +69,72 @@ class QueueTut:
 
     def next(self):
         '''
-        Returns the next available tutor
+        Returns the next available tutor by UID
         :return: Next available tutor or None if no such tutor is available
         '''
         if not(self.is_empty()):
             # this should be practically random, which is fine
             key = next(iter(self.free_queue))
-            return self.free_queue[key]
+            return key
         else:
             return None
 
-    def add(self, tut, title=""):
+    def add(self, tut_uid, busy_state=False):
         '''
         Add a tutor to the queue; presumably they just went on duty
-        :param: tut Tutor or the name of a new Tutor to add to the Tutor queue
-        :param: title Optional argument gives a Tutor a title
-        :return: Tutor removed or None if there's an error
+        :param: tut_uid UID/Tutor object to add
+        :param: busy_state Optional parameter specifies if the tutor is busy
+        :return: Tutor UID added or None if there's an error
         '''
-        # if it's a name, build out a new Tutor object, then add it in
-        if (type(tut) is str):
-            tut = Tutor(tut, title)
-        if (type(tut) is Tutor):
-            if (tut.busy_status()):
-                self.busy_queue[tut.uid] = tut
+        # override busy state if tutor object is provided
+        if (type(tut_uid) is Tutor):
+            busy_state = tut_uid.busy_status()
+        tut_uid = User.get_uid(tut_uid)
+        if (Tutor.is_tut(tut_uid)):
+            if (busy_state):
+                self.busy_queue[tut_uid] = tut_uid
             else:
-                self.free_queue[tut.uid] = tut
-        return tut
+                self.free_queue[tut_uid] = tut_uid
+            return tut_uid
+        return None
 
-    def remove(self, tut):
+    def remove(self, tut_uid):
         '''
         Remove a tutor from the queue; presumably they are now off duty
-        :param: tut Tutor or UID of Tutor to be removed
-        :return: Tutor removed or None if there's an error
+        :param: tut_uid Tutor object/UID of Tutor to be removed
+        :return: UID of Tutor removed or None if there's an error
         '''
-        # convert tut to a key/UID
-        if (type(tut) is Tutor):
-            tut = tut.uid
-        if (type(tut) is str):
+        tut_uid = User.get_uid(tut_uid)
+        if (Tutor.is_tut(tut_uid)):
             val = None
-            if (tut in self.busy_queue):
-                val = self.busy_queue[tut]
-                del self.busy_queue[tut]
-            elif (tut in self.free_queue):
-                val = self.free_queue[tut]
-                del self.free_queue[tut]
+            if (tut_uid in self.busy_queue):
+                val = self.busy_queue[tut_uid]
+                del self.busy_queue[tut_uid]
+            elif (tut_uid in self.free_queue):
+                val = self.free_queue[tut_uid]
+                del self.free_queue[tut_uid]
             return val
         return None
 
-    def get(self, tut):
-        '''
-        Get a tutor object from the queue
-        :param: tut Tutor or UID of Tutor to retrieve
-        :return: Tutor object from the queue structure or None if not found
-        '''
-        key = ""
-        if (type(tut) is Tutor):
-            key = tut.uid
-        elif (type(tut) is str):
-            key = tut
-        if (key != ""):
-            if (key in self.busy_queue):
-                return self.busy_queue[key]
-            elif (key in self.free_queue):
-                return self.free_queue[key]
-        return None
-
-    def update(self, tut):
+    def update(self, tut_uid, busy_state=False):
         '''
         Update the status of the tutor, based on the current status of the
         tutor instance
-        :param: tut Tutor or UID of Tutor to update
+        :param: tut_uid UID/Tutor object to update
+        :param: busy_state Optional parameter specifies if the tutor is busy
         :return: tut.busy_status() or None if update failed
         '''
-        if ((type(tut) is Tutor) or (type(tut) is str)):
+        # override busy state if tutor object is provided
+        if (type(tut_uid) is Tutor):
+            busy_state = tut_uid.busy_status()
+        tut_uid = User.get_uid(tut_uid)
+        if (Tutor.is_tut(tut_uid)):
             # remove the tutor from either queue
-            self.remove(tut)
+            self.remove(tut_uid)
             # re-assign the tutor
-            self.add(tut)
+            self.add(tut_uid, busy_state)
             # return the current status of the Tutor
-            return self.get(tut).busy_status()
+            return busy_state
         else:
             return None
 

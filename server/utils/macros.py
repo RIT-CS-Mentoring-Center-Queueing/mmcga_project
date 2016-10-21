@@ -17,6 +17,10 @@ SERVER_HOST = "localhost"
 SERVER_QUEUE = "Default Queue"
 UID_BOOTSTRAP_QUEUE = "UID Queue"
 
+# UID prefixes that identifies what kind of user we have
+UID_PREFIX_STU = "stu_"
+UID_PREFIX_TUT = "tut_"
+
 # Various semi-official tutor titles
 TUTOR_TA  = "TA"
 TUTOR_SLI = "SLI"

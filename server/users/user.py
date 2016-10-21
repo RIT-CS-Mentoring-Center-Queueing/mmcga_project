@@ -49,6 +49,21 @@ class User:
         '''
         return hash(self.uid)
 
+    def q_count(self):
+        '''
+        Returns the number of questions a user has asked/answered
+        :return: Current question count
+        '''
+        return self.q_count
+
+    def q_increment(self):
+        '''
+        Increments the number of questions a user has asked/answered
+        :return: Current question count
+        '''
+        self.q_count += 1
+        return self.q_count()
+
     @staticmethod
     def get_uid(uid):
         '''
