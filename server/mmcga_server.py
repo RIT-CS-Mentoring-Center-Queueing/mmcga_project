@@ -38,14 +38,29 @@ def msg_callback(ch, method, properties, body):
     printd("Msg: " + str(body))
     msg_map = Bunny.parse_msg(body)
     method = msg_map[MSG_PARAM_METHOD]
-    # "registration" commands
-    if (method == MSG_TUT_ENTER):
+
+    ## "registration" commands ##
+    if (method == MSG_STU_ENTER):
         name = msg_map[MSG_PARAM_USER_NAME]
         queue_manager.register_stu(name)
-    elif (method == MSG_TUT_LEAVE):
+    elif (method == MSG_TUT_ENTER):
         name = msg_map[MSG_PARAM_USER_NAME]
         title = msg_map[MSG_PARAM_USER_TITLE]
         queue_manager.register_tut(name, title)
+    elif (method == MSG_USER_LEAVE):
+        uid = msg_map[MSG_PARAM_UID]
+        queue_manager.deregister_user(uid)
+    ## Student actions ##
+    # student asks a question
+    elif (method == MSG_STU_QUEST):
+        uid = msg_map[MSG_PARAM_UID]
+        queue_manager.stu_ask_q(uid)
+    ## Tutor actions ##
+    # tutor gets done answering a question
+    elif (method == MSG_TUT_DONE):
+        uid = msg_map[MSG_PARAM_UID]
+        queue_manager.tut_ans_q(uid)
+    ## Error - Command not found ##
     else:
         printd("Unknown message: " + str(body))
 

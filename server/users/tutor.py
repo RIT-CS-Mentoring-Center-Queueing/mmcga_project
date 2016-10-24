@@ -45,16 +45,17 @@ class Tutor(User):
         '''
         return self.busy
 
-    def help(self, stu):
+    def help(self, stu_uid):
         '''
         A tutor helps a student
-        :param: stu Student to help
+        :param: stu_uid UID/Student object to help
         :return: UID of student that was just helped or None
         '''
-        if (type(stu) is Student):
-            self.helped.append(stu.uid)
+        stu_uid = User.get_uid(stu_uid)
+        if (stu_uid != None):
+            self.helped.append(stu_uid)
             self.busy = True
-            return stu.uid
+            return stu_uid
         return None
 
     def done(self):
@@ -76,6 +77,6 @@ class Tutor(User):
         :return: True if the UID is a Tutor, False otherwise
         '''
         uid = User.get_uid(uid)
-        if (type(uid) is str):
+        if (uid != None):
             return UID_PREFIX_TUT == uid[:len(UID_PREFIX_TUT)]
         return False

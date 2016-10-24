@@ -39,6 +39,30 @@ class QueueManager:
         self.tut_queue = QueueTut()
         self.bunny = Bunny()
 
+    def __dispatch_tut(self):
+        '''
+        Checks if a tutor is currently available and someone is waiting for a
+        quetion to be answered. If both are true, a Tutor is dispatched to help
+        :return: Tutor dispatched or None if there isn't one
+        '''
+        # check if there is a tutor available to dispatch
+        if not(self.tut_queue.is_empty() and self.stu_queue.is_empty()):
+            # get the UID of the next available tutor and user
+            tut_uid = self.tut_queue.next()
+            stu_uid = self.stu_queue.pop()
+            # update the tutor
+            tut = self.bunny.fetch_user(tut_uid)
+            stu = self.bunny.fetch_user(stu_uid)
+            tut.help(stu_uid)
+            # TODO alert users of the change
+            tbl = {}
+            tbl[MSG_PARAM_METHOD]  = MSG_USER_HELPED
+            tbl[MSG_PARAM_STU_UID] = stu_uid
+            tbl[MSG_PARAM_TUT_UID] = tut_uid
+            self.bunny.send_msg(stu_uid, tbl)
+            slef.bunny.send_msg(tut_uid, tbl)
+        return None
+
     def register_stu(self, name)
         '''
         Registers a student with the system
@@ -60,6 +84,8 @@ class QueueManager:
         user = Tutor(name, title)
         self.bunny.register(user)
         self.tut_queue.add(user)
+        # newly registered tutors should check the queue Student queue
+        self.__dispatch_tut():
         return user
 
     def deregister_user(self, uid)
@@ -74,6 +100,31 @@ class QueueManager:
         elif (uid in self.tut_queue):
             self.tut_queue.purge(uid)
         return uid
+
+    def stu_ask_q(self, stu_uid):
+        '''
+        Function that gets called when a student has a question to be answered
+        :param: stu_uid Student object/UID asking the question
+        '''
+        self.stu_queue.push(stu_uid)
+        # stats: track questions asked
+        stu = self.bunny.fetch_user(stu_uid)
+        stu.q_increment()
+        # student should cause a check to dispatch a tutor
+        self.__dispatch_tut():
+
+    def tut_ans_q(self, tut_uid):
+        '''
+        Function that gets called when a tutor has just answered a question
+        :param: tut_uid Tutor object/UID answering a question
+        '''
+        # stats: track questions asked
+        tut = self.bunny.fetch_user(tut_uid)
+        tut.q_increment()
+        # update tutor state
+        tut.done()
+        # tutor should see if there is somebody else to help
+        self.__dispatch_tut():
 
 #### MAIN       ####
 

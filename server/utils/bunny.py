@@ -30,11 +30,11 @@ class Bunny:
         '''
         Constructs a Bunny object, an interface/wrapper for RabbitMQ messaging
         '''
-        # table that tracks connected Users
+        # table that tracks connected/registered Users
         # originally I thought we would need to track User IPs but that's
         # handled by the RabbitMQ server. This server and user clients just
         # need to be pointed to look at the correct message queue
-        self.uid_dev = {}
+        self.uid_tbl = {}
         # default RabbitMQ exchange to use for out-going messages
         self.exchange = ""
 
@@ -43,9 +43,18 @@ class Bunny:
         Converts Bunny object to a string equivalent
         '''
         result = "===== Bunny Interface =====\n"
-        for key in self.uid_dev:
-            result += str(key) + " -> " + str(self.uid_dev[key]) + "\n"
+        for key in self.uid_tbl:
+            result += str(key) + " -> " + str(self.uid_tbl[key]) + "\n"
         return result
+
+    def __contains__(self, uid):
+        '''
+        Checks if user is registered
+        :param: uid User/UID that identifies who we are looking up
+        :return: True if the UID is found, False otherwise
+        '''
+        uid = User.get_uid(uid)
+        return uid in self.uid_tbl
 
     def __send_msg(self, msg_queue, var_tbl):
         '''
@@ -85,7 +94,7 @@ class Bunny:
             return None
         uid = User.get_uid(user)
         # hash on the uid
-        self.uid_dev[uid] = user
+        self.uid_tbl[uid] = user
         # send a message so that the client can pick up their UID
         var_tbl = {}
         var_tbl[MSG_PARAM_METHOD] = MSG_USER_ENTER
@@ -102,8 +111,8 @@ class Bunny:
         '''
         uid = User.get_uid(uid)
         # remove look up in both directions
-        if ((type(uid) is str) and (uid in self.uid_dev)):
-            del self.uid_dev[uid]
+        if ((type(uid) is str) and (uid in self.uid_tbl)):
+            del self.uid_tbl[uid]
             return uid
         # failure; UID is not a string or in the table
         return None
@@ -118,9 +127,19 @@ class Bunny:
         '''
         # perform some type checking and data validation
         uid = User.get_uid(uid)
-        if not(uid in self.uid_dev):
+        if not(uid in self.uid_tbl):
             return None
         return self.__send_msg(uid, var_tbl)
+
+    def fetch_user(self, uid):
+        '''
+        Fetches a User object that is registered to the system
+        :param: uid User/UID that identifies who we are retrieving
+        :return: UID removed or None if failure
+        '''
+        if (uid in self):
+            return self.uid_tbl[uid]
+        return None
 
     @staticmethod
     def parse_msg(msg_body):

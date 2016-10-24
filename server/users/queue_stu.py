@@ -40,7 +40,7 @@ class QueueStu:
     def __contains__(self, uid):
         '''
         Checks if user is in the queue
-        :param: uid User/UID that identifies who we are removing
+        :param: uid User/UID that identifies who we are looking up
         :return: True if the UID is found, False otherwise
         '''
         uid = User.get_uid(uid)
