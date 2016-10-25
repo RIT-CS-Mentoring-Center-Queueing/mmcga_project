@@ -15,11 +15,6 @@ import sys
 from utils.macros import *
 from utils.utils import printd
 from utils.bunny import Bunny.parse_msg
-# TODO RETHINK WITH NEW QUEUE MANAGER
-#from users.student import Student
-#from users.tutor import Tutor
-#from users.queue_stu import QueueStu
-#from users.queue_tut import QueueTut
 
 #### GLOBALS    ####
 

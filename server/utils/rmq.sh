@@ -8,7 +8,7 @@
 # Originally written for my Fedora box. May be different in the Ubuntu world
 #
 
-USAGE="Usage: ./mmcga_server.sh (start | stop | restart)"
+USAGE="Usage: ./rmq.sh (start | stop | restart)"
 
 # usage checks
 if [ "$#" -ne 1 ]; then
