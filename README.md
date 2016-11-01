@@ -6,7 +6,7 @@ Department's Mentoring Center at the Rochester Institute of Technology (RIT).
 The server/back-end of this project is written in Python3 and relies on a
 RabbitMQ server for message handling, using the Pika Python bindings for
 RabbitMQ. For more specific information about the server, read
-```server/README.md```
+`server/README.md`
 
 ### mmcga_server.sh
 Daemonized script that runs the project server as a headless system daemon/
