@@ -151,11 +151,11 @@ def main():
     '''
     Test program for this class
     '''
-    tut0 = Tutor("Alice", "SLI")
-    tut1 = Tutor("Bob", "TA")
-    tut2 = Tutor("Oscar", "Tutor")
-    stu0 = Student("Student A")
-    stu1 = Student("Student B")
+    tut0 = Tutor("aic4242", "asdf", "Alice", "in Chains", "SLI")
+    tut1 = Tutor("bob8888", "fdsa", "Bob", "Man", "TA")
+    tut2 = Tutor("exo6666", "xkcd", "Evil", "Oscar", "Tutor")
+    stu0 = Student("stu1234", "pass", "Student", "A")
+    stu1 = Student("stu2345", "word", "Student", "B")
     queue = QueueTut();
     print("===== Add commands =====")
     print(queue.len() == 0)

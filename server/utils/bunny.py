@@ -162,10 +162,11 @@ def main():
     Test program for this class
     '''
     bunny = Bunny()
-    stu0 = Student("Alice")
-    stu1 = Student("Bob")
-    stu2 = Student("Oscar")
-    tut0 = Tutor("Tutor", "SLI")
+    stu0 = Student("aic4242", "asdf", "Alice", "in Chains")
+    stu1 = Student("bob8888", "fdsa", "Bob", "Man")
+    stu2 = Student("exo6666", "xkcd", "Evil", "Oscar")
+    tut0 = Tutor("tut1234", "pass", "Student", "A", "SLI")
+
     print("Added: " + str(bunny.register(stu0)))
     print("Added: " + str(bunny.register(stu1)))
     print("Added: " + str(bunny.register(stu2)))

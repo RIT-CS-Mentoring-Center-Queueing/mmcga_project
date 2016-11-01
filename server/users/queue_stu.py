@@ -122,10 +122,15 @@ def main():
     '''
     Test program for this class
     '''
-    stu0 = Student("Alice")
-    stu1 = Student("Bob")
-    stu2 = Student("Oscar")
-    tut0 = Tutor("Tutor", "SLI")
+
+
+
+
+
+    stu0 = Student("aic4242", "asdf", "Alice", "in Chains")
+    stu1 = Student("bob8888", "fdsa", "Bob", "Man")
+    stu2 = Student("exo6666", "xkcd", "Evil", "Oscar")
+    tut0 = Tutor("tut1234", "pass", "Student", "A", "SLI")
     queue = QueueStu("Primary Queue");
     print("===== Push commands =====")
     print(queue.len() == 0)

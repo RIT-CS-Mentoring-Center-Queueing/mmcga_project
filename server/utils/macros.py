@@ -20,6 +20,8 @@ UID_BOOTSTRAP_QUEUE = "UID Queue"
 # UID prefixes that identifies what kind of user we have
 UID_PREFIX_STU = "stu_"
 UID_PREFIX_TUT = "tut_"
+# RIT email extension
+RIT_EMAIL_EXT = "@rit.edu"
 
 # Various semi-official tutor titles
 TUTOR_TA  = "TA"
@@ -44,6 +46,9 @@ MSG_TUT_DONE        = ""
 # TODO Message JSON parameters
 MSG_PARAM_METHOD        = "get_method"
 MSG_PARAM_USER_NAME     = "user_name"
+MSG_PARAM_USER_PASSWD   = "user_passwd"
+MSG_PARAM_USER_F_NAME   = "user_f_name"
+MSG_PARAM_USER_L_NAME   = "user_l_name"
 MSG_PARAM_USER_TITLE    = "user_title"
 # identify users in messaging
 MSG_PARAM_USER_UID      = "user_uid"

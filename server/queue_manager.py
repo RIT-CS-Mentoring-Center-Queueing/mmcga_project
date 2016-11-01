@@ -63,25 +63,31 @@ class QueueManager:
             slef.bunny.send_msg(tut_uid, tbl)
         return None
 
-    def register_stu(self, name)
+    def register_stu(self, rit_name, passwd, f_name, l_name)
         '''
         Registers a student with the system
-        :param: name Name of the user
+        :param: rit_name Username of the user (RIT email, sans @rit.edu)
+        :param: passwd Password, encrypted by client
+        :param: f_name First name of the user
+        :param: l_name Last name of the user
         :return: New user object
         '''
-        user = Student(name)
+        user = Student(rit_name, passwd, f_name, l_name)
         self.bunny.register(user)
         self.stu_queue.push(user)
         return user
 
-    def register_tut(self, name, title="")
+    def register_tut(self, rit_name, passwd, f_name, l_name, title="")
         '''
         Registers a tutor with the system
-        :param: name Name of the user
+        :param: rit_name Username of the user (RIT email, sans @rit.edu)
+        :param: passwd Password, encrypted by client
+        :param: f_name First name of the user
+        :param: l_name Last name of the user
         :param: title Optional title of the tutor
         :return: New user object
         '''
-        user = Tutor(name, title)
+        user = Tutor(rit_name, passwd, f_name, l_name, title)
         self.bunny.register(user)
         self.tut_queue.add(user)
         # newly registered tutors should check the queue Student queue

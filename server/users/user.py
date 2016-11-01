@@ -7,18 +7,27 @@
 ##
 
 import uuid
+from utils.macros import RIT_EMAIL_EXT
 
 class User:
     '''
     Generic user class
     '''
 
-    def __init__(self, name):
+    def __init__(self, rit_name, passwd, f_name, l_name):
         '''
         User contstructor
-        :param: name Name of the user
+        :param: rit_name Username of the user (RIT email, sans @rit.edu)
+        :param: passwd Password, encrypted by client
+        :param: f_name First name of the user
+        :param: l_name Last name of the user
         '''
-        self.name = name
+        # basic user information
+        self.name   = rit_name
+        self.email  = self.name + RIT_EMAIL_EXT
+        self.passwd = passwd
+        self.f_name = f_name
+        self.l_name = l_name
         # for now, unique IDs are generated at random
         self.uid = str(uuid.uuid4())
         # the number of questions a user has asked/answered
