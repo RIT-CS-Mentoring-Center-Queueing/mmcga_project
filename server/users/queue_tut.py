@@ -151,13 +151,13 @@ def main():
     '''
     Test program for this class
     '''
-    tut0 = Tutor("aic4242", "asdf", "Alice", "in Chains", "SLI")
-    tut1 = Tutor("bob8888", "fdsa", "Bob", "Man", "TA")
+    tut0 = Tutor("aic4242", "pass", "Alice", "in Chains", "SLI")
+    tut1 = Tutor("bob8888", "pass", "Bob", "Man", "TA")
     tut2 = Tutor("exo6666", "xkcd", "Evil", "Oscar", "Tutor")
     stu0 = Student("stu1234", "pass", "Student", "A")
     stu1 = Student("stu2345", "word", "Student", "B")
     queue = QueueTut();
-    print("===== Add commands =====")
+    print("##### Add commands #####")
     print(queue.len() == 0)
     print(queue.is_empty() == True)
     queue.add(tut0)
@@ -167,7 +167,7 @@ def main():
     print(queue.len() == 3)
     print(queue.is_empty() == False)
     print(str(queue))
-    print("===== Next/Update commands =====")
+    print("##### Next/Update commands #####")
     print("next() call:" + str(queue.next()))
     print("next() call:" + str(queue.next()))
     print(tut0.help(stu0) == stu0)
@@ -182,7 +182,7 @@ def main():
     print(tut0.done() == stu0)
     print(queue.update(tut0) == False)
     print(str(queue))
-    print("===== Purge commands =====")
+    print("##### Purge commands #####")
     print(queue.remove(stu0) == None)
     print(queue.remove(tut2) == tut2)
     print(not(tut2 in queue))

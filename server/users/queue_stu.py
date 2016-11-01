@@ -122,17 +122,12 @@ def main():
     '''
     Test program for this class
     '''
-
-
-
-
-
-    stu0 = Student("aic4242", "asdf", "Alice", "in Chains")
-    stu1 = Student("bob8888", "fdsa", "Bob", "Man")
+    stu0 = Student("aic4242", "pass", "Alice", "in Chains")
+    stu1 = Student("bob8888", "pass", "Bob", "Man")
     stu2 = Student("exo6666", "xkcd", "Evil", "Oscar")
-    tut0 = Tutor("tut1234", "pass", "Student", "A", "SLI")
+    tut0 = Tutor("tut1234", "pass", "Tutor", "A", "SLI")
     queue = QueueStu("Primary Queue");
-    print("===== Push commands =====")
+    print("##### Push commands #####")
     print(queue.len() == 0)
     print(queue.is_empty() == True)
     queue.push(stu0)
@@ -142,12 +137,12 @@ def main():
     print(queue.len() == 3)
     print(queue.is_empty() == False)
     print(str(queue))
-    print("===== Pop/Top commands =====")
+    print("##### Pop/Top commands #####")
     print(queue.top())
     print(queue.top() == stu0)
     print(queue.pop() == stu0)
     print(str(queue))
-    print("===== Purge commands =====")
+    print("##### Purge commands #####")
     print(queue.purge(tut0) == None)
     print(queue.purge(stu2) == stu2)
     print(not(stu2 in queue))

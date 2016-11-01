@@ -50,4 +50,20 @@ if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 3 ]; then
     # kill the RabbitMQ server
     ./utils/rmq.sh "stop"
 fi
+
+if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 4 ]; then
+    echo "###################### TEST 4: QueueManager ######################"
+    # start the RabbitMQ server for this test
+    ./utils/rmq.sh "start"
+    # Rabbit MQ server command failed
+    if [ "$?" -ne 0 ]; then
+        echo "ERROR: Rabbit MQ Server Failure!"
+        exit 42
+    fi
+
+    python3 -m queue_manager
+
+    # kill the RabbitMQ server
+    ./utils/rmq.sh "stop"
+fi
 echo "######################  END TESTS  ######################"
