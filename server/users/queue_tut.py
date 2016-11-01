@@ -4,9 +4,10 @@
 ## Author:  Schuyler Martin <sam8050@rit.edu>
 ##
 ## Description: Python class that defines a Tutor Queue data structure for
-## the server. It makes sense to only ever have one queue of tutors and queue
-## probably isn't the best term for Tutor management; Tutors can become
-## available at any one point and may come and go as their shifts end
+##              the server. It makes sense to only ever have one queue of
+##              tutors and queue probably isn't the best term for Tutor
+##              management; Tutors can become available at any one point and
+##              may come and go as their shifts end
 ##
 
 from users.tutor import Tutor

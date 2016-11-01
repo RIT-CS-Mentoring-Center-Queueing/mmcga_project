@@ -5,7 +5,7 @@
 ## Author:  Schuyler Martin <sam8050@rit.edu>
 ##
 ## Description: This file defines the QueueManager class that provides high-
-## level functionality for managing users in the Mentoring Center.
+##              level functionality for managing users in the Mentoring Center.
 ##
 
 # Python libraries

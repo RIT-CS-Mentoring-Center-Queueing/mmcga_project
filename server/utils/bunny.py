@@ -4,7 +4,7 @@
 ## Author:  Schuyler Martin <sam8050@rit.edu>
 ##
 ## Description: Python class that provides infrastructure for sending messages
-## over RabbitMQ to client devices/users
+##              over RabbitMQ to client devices/users
 ##
 
 # Python libraries

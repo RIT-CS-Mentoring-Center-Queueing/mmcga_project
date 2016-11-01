@@ -4,8 +4,8 @@
 ## Author:  Schuyler Martin <sam8050@rit.edu>
 ##
 ## Description: Python class that defines a Student Queue data structure for
-## the server. For now there will only be one Queue of students, but there
-## could be one per Tutor later on
+##              the server. For now there will only be one Queue of students,
+##              but there could be one per Tutor later on
 ##
 
 from users.student import Student

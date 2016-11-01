@@ -4,7 +4,7 @@
 ## Author:  Schuyler Martin <sam8050@rit.edu>
 ##
 ## Description: Python class that defines a tutor user for the system
-## This is someone who can answer questions
+##              This is someone who can answer questions
 ##
 
 from users.user import User

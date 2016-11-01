@@ -4,7 +4,7 @@
 ## Author:  Schuyler Martin <sam8050@rit.edu>
 ##
 ## Description: Python class that defines a student user for the system
-## This is a user who asks questions.
+##              This is a user who asks questions.
 ##
 
 from users.user import User
