@@ -32,4 +32,16 @@ if [ "$1" = "restart" ]; then
 fi
 
 # $1 = start | stop | restart
-sudo /bin/systemctl $1 rabbitmq-server
+
+# Debian/Ubuntu
+which "apt-get" &> /dev/null
+if [ "$?" -eq 0 ]; then
+    sudo invoke-rc.d rabbitmq-server "$1"
+    exit 0
+fi
+# RHEL/Fedora/CentOS
+which "yum" &> /dev/null
+if [ "$?" -eq 0 ]; then
+    sudo /bin/systemctl "$1" rabbitmq-server
+    exit 0
+fi

@@ -28,9 +28,10 @@ TUTOR_TUT = "Tutor"
 
 # TODO Message commands/interface with the app
 # User enters/leaves the Mentoring Center
-MSG_STU_ENTER       = ""
-MSG_TUT_ENTER       = ""
-MSG_USER_LEAVE      = ""
+MSG_STU_ENTER       = "stu_enters"
+MSG_TUT_ENTER       = "tut_enters"
+MSG_USER_ENTER      = "user_enters"
+MSG_USER_LEAVE      = "user_leaves"
 # Generic "User is getting helped or giving help"
 MSG_USER_HELPED     = ""
 # Student proposes question/gets question answered
