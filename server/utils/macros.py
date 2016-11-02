@@ -54,3 +54,26 @@ MSG_PARAM_USER_TITLE    = "user_title"
 MSG_PARAM_USER_UID      = "user_uid"
 MSG_PARAM_STU_UID       = "student_uid"
 MSG_PARAM_TUT_UID       = "tutor_uid"
+
+# SQLite database file naming
+SQL_DB_PATH       = "./"
+SQL_DB_FILE       = "mmcga.db"
+SQL_DB            = SQL_DB_PATH + SQL_DB_FILE
+# debug version of the database for testing purposes
+SQL_DB_FILE_DEBUG = "debug_test_mmcga.db"
+SQL_DB_DEBUG      = SQL_DB_PATH + SQL_DB_FILE_DEBUG
+
+# TODO Database tables
+DB_USER_TBL       = "Users"
+
+# alternative indices in the table ("secondary keys")
+DB_UNAME_IDX      = "user_name_idx"
+
+# fields for DB tables
+DB_FIELD_UID      = "uid"
+DB_FIELD_UNAME    = "user_name"
+DB_FIELD_JSON     = "json_str"
+
+# field types for DB tables
+DB_F_TYPE_INT     = "INTEGER"
+DB_F_TYPE_TXT     = "TEXT"
