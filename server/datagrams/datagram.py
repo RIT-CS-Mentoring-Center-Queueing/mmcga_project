@@ -25,6 +25,7 @@ class Datagram():
         '''
         # this is done in a generic way so you don't have to modify the print
         # everytime new datagram properties are added
+        result = ""
         for key in self.__dict__:
             result += "  " + str(key) + " -> " + str(self.__dict__[key]) + "\n"
         return result

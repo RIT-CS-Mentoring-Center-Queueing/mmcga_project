@@ -36,7 +36,12 @@ if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 2 ]; then
 fi
 
 if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 3 ]; then
-    echo "###################### TEST 3: Bunny Class ######################"
+    echo "###################### TEST 3: JSON Encoder ######################"
+    python3 -m datagrams.json_db_encoder
+fi
+
+if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 4 ]; then
+    echo "###################### TEST 4: Bunny Class ######################"
     # start the RabbitMQ server for this test
     ./utils/rmq.sh "start"
     # Rabbit MQ server command failed
@@ -51,8 +56,8 @@ if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 3 ]; then
     ./utils/rmq.sh "stop"
 fi
 
-if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 4 ]; then
-    echo "###################### TEST 4: QueueManager ######################"
+if [ "${test_id}" -eq 0 ] || [ "${test_id}" -eq 5 ]; then
+    echo "###################### TEST 5: QueueManager ######################"
     # start the RabbitMQ server for this test
     ./utils/rmq.sh "start"
     # Rabbit MQ server command failed
