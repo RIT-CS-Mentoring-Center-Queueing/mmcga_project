@@ -32,6 +32,6 @@ fi
 # managed by the RabbitMQ server
 if [ "$1" = "start" ]; then
     /usr/bin/python3 server/mmcga_server.py
-    # TODO Testing: I don't want RabbitMQ running on my box all the time
+    # Testing: I don't want RabbitMQ running on my box all the time
     ./server/utils/rmq.sh "stop"
 fi

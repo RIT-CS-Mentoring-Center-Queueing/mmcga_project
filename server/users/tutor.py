@@ -7,6 +7,7 @@
 ##              This is someone who can answer questions
 ##
 
+from datagrams.tutor_experience import TutorExperience
 from users.user import User
 from users.student import Student
 from utils.macros import UID_PREFIX_TUT
@@ -18,18 +19,17 @@ class Tutor(User):
 
     def __init__(self, rit_name, passwd, f_name, l_name, title):
         '''
-        Tutor contstructor
+        Tutor constructor
         :param: rit_name Username of the user (RIT email, sans @rit.edu)
         :param: passwd Password, encrypted by client
         :param: f_name First name of the user
         :param: l_name Last name of the user
         :param: title Job title of the Tutor (TA, SLI, etc)
         '''
-        super().__init__(rit_name, passwd, f_name, l_name)
         # identify the type of user in the UID string 
-        self.uid = UID_PREFIX_TUT + self.uid
-        # Give the user a title
-        self.title = title
+        super().__init__(rit_name, passwd, f_name, l_name, UID_PREFIX_TUT)
+        # tutor experience information
+        self.exp = TutorExperience(self.uid, title)
         # indicates if the tutor is available to answer questions
         self.busy = False
         # list of student IDs of students this tutor has helped
@@ -39,7 +39,7 @@ class Tutor(User):
         '''
         Converts user to a string equivalent
         '''
-        return "Tutor(" + self.title + ") " + super().__str__()
+        return "Tutor(" + self.exp.get_title() + ") " + super().__str__()
 
     def busy_status(self):
         '''

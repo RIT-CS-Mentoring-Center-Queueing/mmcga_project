@@ -7,6 +7,7 @@
 ##
 
 import uuid
+from datagrams.user_stats import UserStats
 from utils.macros import RIT_EMAIL_EXT
 
 class User:
@@ -14,13 +15,14 @@ class User:
     Generic user class
     '''
 
-    def __init__(self, rit_name, passwd, f_name, l_name):
+    def __init__(self, rit_name, passwd, f_name, l_name, uid_prefix=""):
         '''
-        User contstructor
+        User constructor
         :param: rit_name Username of the user (RIT email, sans @rit.edu)
         :param: passwd Password, encrypted by client
         :param: f_name First name of the user
         :param: l_name Last name of the user
+        :param: uid_prefix Optional prefix for UIDs to identify user types
         '''
         # basic user information
         self.name   = rit_name
@@ -29,9 +31,9 @@ class User:
         self.f_name = f_name
         self.l_name = l_name
         # for now, unique IDs are generated at random
-        self.uid = str(uuid.uuid4())
-        # the number of questions a user has asked/answered
-        self.q_count = 0
+        self.uid = uid_prefix + str(uuid.uuid4())
+        # datagram for storing user statistics
+        self.stats = UserStats(self.uid)
 
     def __str__(self):
         '''
@@ -58,20 +60,33 @@ class User:
         '''
         return hash(self.uid)
 
-    def q_count(self):
+    def get_stats(self):
         '''
-        Returns the number of questions a user has asked/answered
-        :return: Current question count
+        Returns the UserStats datagram associated with this user
+        :return: UserStats object belonging to this user
         '''
-        return self.q_count
+        return self.stats
+
+    def str_stats(self):
+        '''
+        Dumps the statistics of a user as a string
+        :return: Stats as a string
+        '''
+        return str(self.get_stats())
 
     def q_increment(self):
         '''
         Increments the number of questions a user has asked/answered
         :return: Current question count
         '''
-        self.q_count += 1
-        return self.q_count()
+        return self.stats.q_increment("q_count")
+
+    def login_increment(self):
+        '''
+        Increments the number of logins a user has had
+        :return: Current login count
+        '''
+        return self.stats.stat_increment("login_count")
 
     @staticmethod
     def get_uid(uid):

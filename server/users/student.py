@@ -17,15 +17,14 @@ class Student(User):
 
     def __init__(self, rit_name, passwd, f_name, l_name):
         '''
-        Student contstructor
+        Student constructor
         :param: rit_name Username of the user (RIT email, sans @rit.edu)
         :param: passwd Password, encrypted by client
         :param: f_name First name of the user
         :param: l_name Last name of the user
         '''
-        super().__init__(rit_name, passwd, f_name, l_name)
         # identify the type of user in the UID string 
-        self.uid = UID_PREFIX_STU + self.uid
+        super().__init__(rit_name, passwd, f_name, l_name, UID_PREFIX_STU)
 
     def __str__(self):
         '''

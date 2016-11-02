@@ -41,6 +41,25 @@ the server code. Tests can be run individually or all at once.
 ./run_tests.sh [test_#]
 ```
 
+### Datagrams Package
+This directory/package stores information about users, questions, and other
+kinds of statistics or meta-data. These "datagram" groupings are meant to make
+it easier to expand on this kind of information in the future, without having
+to make drastic changes to other classes.
+
+#### datagram.py
+Base Datagram class for others to inherit properties from.
+
+#### question_ticket.py
+Datagram for storing meta-data about a student question.
+
+#### tutor_experience.py
+Datagram for storing information relating to the experience/knowledge of a
+tutor.
+
+#### user_stats.py
+Datagram for storing user statistics.
+
 
 ### rmq_examples Directory
 This directory holds some initial "Hello World" code I wrote to test talking to
