@@ -118,11 +118,11 @@ class Bunny:
         '''
         db_connect = self.__db_connect()
         cur = db_connect.execute(
-            """
-            SELECT name
-            FROM sqlite_master
-            WHERE type='table'
-            ORDER BY name;
+            """\
+            SELECT name\
+            FROM sqlite_master\
+            WHERE type='table'\
+            ORDER BY name;\
             """)
         lst = cur.fetchall()
         self.__db_disconnect(db_connect)
@@ -134,19 +134,18 @@ class Bunny:
         :param: tbl_name Name of the table of interest
         :return: True if the table exists, false otherwise
         '''
+        is_there = False
         db_connect = self.__db_connect()
         cur = db_connect.execute(
-            """
-            SELECT COUNT(*)
-            FROM sqlite_master
-            WHERE type='table' AND name='{tbl}';
+            """\
+            SELECT *\
+            FROM sqlite_master\
+            WHERE type='table' AND name='{tbl}';\
             """.format(tbl=tbl_name))
-        if (cur.fetchone()[0] == 1):
-            self.__db_disconnect(db_connect)
-            return True
-
+        if (cur.fetchone() != None):
+            is_there = True
         self.__db_disconnect(db_connect)
-        return False
+        return is_there
 
     def __db_init(self):
         '''
@@ -160,12 +159,12 @@ class Bunny:
             # - User names as an index
             # - JSON serialization of Python object state
             db_connect.execute(
-                """
-                CREATE TABLE {tbl_name} (
-                    {f0} {t0} PRIMARY KEY,
-                    {f1} {t1},
-                    {f2} {t2}
-                );
+                """\
+                CREATE TABLE {tbl_name} (\
+                    {f0} {t0} PRIMARY KEY,\
+                    {f1} {t1},\
+                    {f2} {t2}\
+                );\
                 """.format(
                     tbl_name=DB_USER_TBL,
                     f0=DB_FIELD_UID,   t0=DB_F_TYPE_TXT,
@@ -184,40 +183,150 @@ class Bunny:
             )
         self.__db_disconnect(db_connect)
 
-    def __db_lookup(self, key):
+    def __db_lookup(self, key, key_val, tbl):
         '''
-        Checks if key is in the database
-        :param: key Key to lookup
+        Checks if a specific key value is in the database table
+        :param: key Key (name) to lookup
+        :param: key_val Value of the key to look up
+        :param: tbl Table to look into
         :return: True if the key is there, False otherwise
         '''
-        pass
+        is_there = False
+        db_connect = self.__db_connect()
+        # check if the table exists
+        if (self.__db_tbl_exists(DB_USER_TBL)):
+            # perform lookup
+            cur = db_connect.execute(
+                """
+                SELECT {key} FROM {tbl_name} WHERE {key}='{key_val}';
+                """.format(
+                    key=key, key_val=key_val, tbl_name=tbl,
+                )
+            )
+            if (cur.fetchone() != None):
+                is_there = True
+        self.__db_disconnect(db_connect)
+        return is_there
 
-    def __db_load(self, key):
+    def __db_lookup_uid(self, uid):
+        '''
+        Checks if a specific UID key value is in the database table
+        :param: uid Value of the UID key to look up
+        :param: tbl Table to look into
+        :return: True if the key is there, False otherwise
+        '''
+        return self.__db_lookup(self, DB_FIELD_UID, uid, tbl)
+
+    def __db_load(self, key, key_val, tbl):
         '''
         Loads a JSON map from the a JSON string in the database
-        :param: key Key to the data to load
+        :param: key Key (name) to load
+        :param: key_val Value of the key to load
+        :param: tbl Table to load from
+        :return: JSON dictionary mappings from the database or None if failure
+        '''
+        db_connect = self.__db_connect()
+        # perform access
+        cur = db_connect.execute(
+            """
+            SELECT {json} FROM {tbl_name} WHERE {key}='{key_val}';
+            """.format(
+                key=key, key_val=key_val, tbl_name=tbl, json=DB_FIELD_JSON,
+            )
+        )
+        json_str = cur.fetchone()
+        self.__db_disconnect(db_connect)
+        # remove ''s from SQL storage
+        json_str = json_str.replace("''", "'")
+        # it is now up to classes to know how to turn the map into an object
+        return json.loads(json_str)
+
+    def __db_load_uid(self, uid, tbl):
+        '''
+        Loads a JSON map from the a JSON string in the database
+        :param: uid Value of the UID key to load
+        :param: tbl Table to load from
         :return: JSON dictionary mappings from the database
         '''
-        pass
+        return self.__db_load(DB_FIELD_UID, uid, tbl)
 
-    def __db_store(self, obj, tbl):
+    def __db_store(self, key, key_val, tbl, obj, idx=None, idx_val=None):
         '''
         Takes an object, serializes it into JSON, and stores it in the database
-        :param: obj Python object to store
-        :param: tbl Table to store data into
+        :param: key Key (name) to load
+        :param: key_val Value of the key to load
+        :param: tbl Table to store to
+        :param: obj Object to serialize and store
+        :param: idx Optional index (secondary key)
+        :param: idx_val Optional index value (secondary key)
         :return: JSON string stored in the database
         '''
         json_str = JSON_DB_Encoder.dumps(obj)
-        db_connect = self.__db_connect()
-        # TODO store object in the database
-        self.__db_disconnect(db_connect)
+        # double up on 's to escape them for SQL storage
+        json_str = json_str.replace("'", "''")
+        # update if key exists
+        if (self.__db_lookup(key, key_val, tbl)):
+            db_connect = self.__db_connect()
+            # update object in the database
+            cur = db_connect.execute(
+                """\
+                UPDATE {tbl_name}\
+                SET {json}='{json_val}'\
+                WHERE {key}='{key_val}';\
+                """.format(
+                    tbl_name=tbl,
+                    key=key, key_val=key_val,
+                    json=DB_FIELD_JSON, json_val=json_str,
+                )
+            )
+            self.__db_disconnect(db_connect)
+        # otherwise, insert for the first time
+        else:
+            # store object in the database
+            db_connect = self.__db_connect()
+            cur = db_connect.execute(
+                """\
+                INSERT INTO {tbl_name} ({key}, {json})\
+                VALUES ('{key_val}', '{json_val}');\
+                """.format(
+                    tbl_name=tbl,
+                    key=key, key_val=key_val,
+                    json=DB_FIELD_JSON, json_val=json_str,
+                )
+            )
+            self.__db_disconnect(db_connect)
+        # if these are set, set them in the row
+        if ((idx != None) and (idx_val != None)):
+            cur = db_connect.execute(
+                """\
+                UPDATE {tbl_name}\
+                SET {idx}='{idx_val}'\
+                WHERE {key}='{key_val}';\
+                """.format(
+                    tbl_name=tbl,
+                    idx=idx, idx_val=idx_val,
+                )
+            )
+        return json_str
+
+    def __db_store_uid(self, uid, tbl, obj, idx=None, idx_val=None):
+        '''
+        Takes an object, serializes it into JSON, and stores it in the database
+        :param: uid Value of the UID key to store
+        :param: tbl Table to store to
+        :param: obj Object to serialize and store
+        :param: idx Optional index (secondary key)
+        :param: idx_val Optional index value (secondary key)
+        :return: JSON string stored in the database
+        '''
+        return self.__db_store(DB_FIELD_UID, uid, tbl, obj, idx, idx_val)
         
     ## END: DB Functions ##
     #### END: Internal Functions ####
 
     def register(self, user):
         '''
-        Adds a user; user connects to the system
+        Adds a user object; user connects to the system for the first time
         :param: user User object being created
         :return: User object added or None if failure
         '''
@@ -226,6 +335,10 @@ class Bunny:
         uid = User.get_uid(user)
         # hash on the uid
         self.uid_tbl[uid] = user
+        # TODO error checking before alerting the user of success
+        # check for duplicates
+        # register user with DB
+        self.__db_store_uid(uid, DB_USER_TBL, user)
         # send a message so that the client can pick up their UID
         var_tbl = {}
         var_tbl[MSG_PARAM_METHOD] = MSG_USER_ENTER
@@ -234,13 +347,26 @@ class Bunny:
         self.__send_msg(UID_BOOTSTRAP_QUEUE, var_tbl)
         return user
 
+    def login(self, user_name, passwd):
+        '''
+        Loads a user object from the DB; user logs into the system
+        :param: user User object being created
+        :return: User object added or None if failure
+        '''
+        # TODO
+        self.__db_load(self, key, key_val, tbl)
+        pass
+
     def deregister(self, uid):
         '''
-        Removes a user; user disconnects to the system
+        Removes a user; user disconnects from the system as they leave the
+        Mentoring Center. User state is saved for next login
         :param: uid User/UID that identifies who we are removing
         :return: UID removed or None if failure
         '''
         uid = User.get_uid(uid)
+        # update user in DB
+        self.__db_store_uid(uid, DB_USER_TBL, self.uid_tbl[uid])
         # remove look up in both directions
         if ((type(uid) is str) and (uid in self.uid_tbl)):
             del self.uid_tbl[uid]
