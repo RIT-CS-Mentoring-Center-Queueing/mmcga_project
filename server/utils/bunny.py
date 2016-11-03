@@ -354,8 +354,19 @@ class Bunny:
         :return: User object added or None if failure
         '''
         # TODO
-        self.__db_load(self, key, key_val, tbl)
-        pass
+        json_map = self.__db_load(self, key, key_val, tbl)
+        uid = json_map[DB_FIELD_UID]
+        # TODO password auth failure
+        if (json_map["passwd"] != passwd):
+            return None
+        user = None
+        # decide which user gets generated
+        if (Tutor.is_tut(uid)):
+            pass
+        elif (Student.is_stu(uid)):
+            pass
+        # register the user with the current status of the system
+        return self.register(user)
 
     def deregister(self, uid):
         '''
