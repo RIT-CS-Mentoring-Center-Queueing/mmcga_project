@@ -42,6 +42,8 @@ MSG_STU_ANS         = ""
 # Tutor is assigned a question/finishes with a student
 MSG_TUT_HELP        = ""
 MSG_TUT_DONE        = ""
+# Error messages
+MSG_ERR_USER_LOGIN  = "err_user_login"
 
 # TODO Message JSON parameters
 MSG_PARAM_METHOD        = "get_method"

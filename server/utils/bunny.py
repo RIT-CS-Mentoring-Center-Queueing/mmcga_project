@@ -353,18 +353,32 @@ class Bunny:
         :param: user User object being created
         :return: User object added or None if failure
         '''
-        # TODO
+        # attempt to load the user_name from the DB
         json_map = self.__db_load(self, key, key_val, tbl)
-        uid = json_map[DB_FIELD_UID]
-        # TODO password auth failure
-        if (json_map["passwd"] != passwd):
+
+        # if there are login failures, alert the user and return None
+        var_tbl = {}
+        var_tbl[MSG_PARAM_METHOD] = MSG_ERR_USER_LOGIN
+        var_tbl[MSG_PARAM_USER_NAME] = user.name
+        if (json_map == None):
+            self.__send_msg(UID_BOOTSTRAP_QUEUE, var_tbl)
             return None
+        # missing fields errors (shouldn't happen)
+        if not((DB_FIELD_UID in json_map) and ("passwd" in json_map)):
+            self.__send_msg(UID_BOOTSTRAP_QUEUE, var_tbl)
+            return None
+        # password auth failure
+        if (json_map["passwd"] != passwd):
+            self.__send_msg(UID_BOOTSTRAP_QUEUE, var_tbl)
+            return None
+
+        uid = json_map[DB_FIELD_UID]
         user = None
         # decide which user gets generated
         if (Tutor.is_tut(uid)):
-            pass
+            user = Tutor(init_map=json_map)
         elif (Student.is_stu(uid)):
-            pass
+            user = Student(init_map=json_map)
         # register the user with the current status of the system
         return self.register(user)
 
