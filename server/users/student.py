@@ -15,16 +15,22 @@ class Student(User):
     Student user class
     '''
 
-    def __init__(self, rit_name, passwd, f_name, l_name):
+    def __init__(self, rit_name="", passwd="", f_name="", l_name="",
+            init_map=None):
         '''
-        Student constructor
+        Student constructor, uses optional named parameters
         :param: rit_name Username of the user (RIT email, sans @rit.edu)
         :param: passwd Password, encrypted by client
         :param: f_name First name of the user
         :param: l_name Last name of the user
+        :param: init_map Dictionary that maps class attributes to values
+                This map, if it is passed in, will replace all attributes that
+                are seen in the dictionary. This is how we load an object from
+                JSON in the DB
         '''
         # identify the type of user in the UID string 
-        super().__init__(rit_name, passwd, f_name, l_name, UID_PREFIX_STU)
+        super().__init__(rit_name, passwd, f_name, l_name, UID_PREFIX_STU,
+            init_map)
 
     def __str__(self):
         '''

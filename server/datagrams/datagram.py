@@ -12,12 +12,22 @@ class Datagram():
     Base class for Datagrams that provide some basic features
     '''
 
-    def __init__(self, uid):
+    def __init__(self, uid="", init_map=None):
         '''
-        Base Datagram constructor
+        Base Datagram constructor, uses optional named parameters
         :param: uid UID of user that these stats belong to
+        :param: init_map Dictionary that maps class attributes to values
+                This map, if it is passed in, will replace all attributes that
+                are seen in the dictionary. This is how we load an object from
+                JSON in the DB
         '''
+        # class attributes
         self.uid = uid
+
+        # override attributes in the map
+        if (init_map != None):
+            if ("uid" in init_map):
+                self.uid  = init_map["uid"]
 
     def __str__(self):
         '''

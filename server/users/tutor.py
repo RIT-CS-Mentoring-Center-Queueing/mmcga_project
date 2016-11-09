@@ -17,23 +17,39 @@ class Tutor(User):
     Tutor user class
     '''
 
-    def __init__(self, rit_name, passwd, f_name, l_name, title):
+    def __init__(self, rit_name="", passwd="", f_name="", l_name="",
+            title="", init_map=None):
         '''
-        Tutor constructor
+        Tutor constructor, uses optional named parameters
         :param: rit_name Username of the user (RIT email, sans @rit.edu)
         :param: passwd Password, encrypted by client
         :param: f_name First name of the user
         :param: l_name Last name of the user
         :param: title Job title of the Tutor (TA, SLI, etc)
+        :param: init_map Dictionary that maps class attributes to values
+                This map, if it is passed in, will replace all attributes that
+                are seen in the dictionary. This is how we load an object from
+                JSON in the DB
         '''
         # identify the type of user in the UID string 
-        super().__init__(rit_name, passwd, f_name, l_name, UID_PREFIX_TUT)
+        super().__init__(rit_name, passwd, f_name, l_name, UID_PREFIX_TUT,
+            init_map)
+        # class attributes
         # tutor experience information
         self.exp = TutorExperience(self.uid, title)
         # indicates if the tutor is available to answer questions
         self.busy = False
         # list of student IDs of students this tutor has helped
         self.helped = []
+
+        # override attributes in the map
+        if (init_map != None):
+            if ("exp" in init_map):
+                self.exp = TutorExperience(init_map=init_map["exp"])
+            if ("busy" in init_map):
+                self.busy  = init_map["busy"]
+            if ("helped" in init_map):
+                self.helped  = init_map["helped"]
 
     def __str__(self):
         '''

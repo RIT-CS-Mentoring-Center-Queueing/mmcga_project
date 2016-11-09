@@ -14,16 +14,27 @@ class UserStats(Datagram):
     Class for storing statistics on a user
     '''
 
-    def __init__(self, uid):
+    def __init__(self, uid="", init_map=None):
         '''
-        UserStat constructor
+        UserStat constructor, uses optional named parameters
         :param: uid UID of user that these stats belong to
+        :param: init_map Dictionary that maps class attributes to values
+                This map, if it is passed in, will replace all attributes that
+                are seen in the dictionary. This is how we load an object from
+                JSON in the DB
         '''
-        super().__init__(uid)
+        super().__init__(uid, init_map)
         # number of questions a student has asked or a tutor has answered
         self.q_count = 0
         # number of times logged into the system
         self.login_count = 0
+
+        # override attributes in the map
+        if (init_map != None):
+            if ("q_count" in init_map):
+                self.q_count  = init_map["q_count"]
+            if ("login_count" in init_map):
+                self.login_count  = init_map["login_count"]
 
     def __str__(self):
         '''

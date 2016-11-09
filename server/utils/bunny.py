@@ -376,10 +376,10 @@ class Bunny:
         :return: UID removed or None if failure
         '''
         uid = User.get_uid(uid)
-        # update user in DB
-        self.__db_store_uid(uid, DB_USER_TBL, self.uid_tbl[uid])
         # remove look up in both directions
         if ((type(uid) is str) and (uid in self.uid_tbl)):
+            # update user in DB
+            self.__db_store_uid(uid, DB_USER_TBL, self.uid_tbl[uid])
             del self.uid_tbl[uid]
             return uid
         # failure; UID is not a string or in the table
