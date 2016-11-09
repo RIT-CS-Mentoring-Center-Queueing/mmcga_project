@@ -35,13 +35,13 @@ MSG_TUT_ENTER       = "tut_enters"
 MSG_USER_ENTER      = "user_enters"
 MSG_USER_LEAVE      = "user_leaves"
 # Generic "User is getting helped or giving help"
-MSG_USER_HELPED     = ""
+MSG_USER_HELPED     = "user_help"
 # Student proposes question/gets question answered
-MSG_STU_QUEST       = ""
-MSG_STU_ANS         = ""
+MSG_STU_QUEST       = "stu_question"
+MSG_STU_ANS         = "stu_answer"
 # Tutor is assigned a question/finishes with a student
-MSG_TUT_HELP        = ""
-MSG_TUT_DONE        = ""
+MSG_TUT_HELP        = "tut_help"
+MSG_TUT_DONE        = "tut_done"
 # Error messages
 MSG_ERR_USER_LOGIN  = "err_user_login"
 
