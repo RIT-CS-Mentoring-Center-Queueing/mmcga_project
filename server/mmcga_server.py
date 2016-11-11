@@ -35,12 +35,14 @@ def msg_callback(ch, method, properties, body):
     method = msg_map[MSG_PARAM_METHOD]
 
     ## "registration" commands ##
+    # first-time student registration
     if (method == MSG_STU_ENTER):
         name   = msg_map[MSG_PARAM_USER_NAME]
         passwd = msg_map[MSG_PARAM_USER_PASSWD]
         f_name = msg_map[MSG_PARAM_USER_F_NAME]
         l_name = msg_map[MSG_PARAM_USER_L_NAME]
         queue_manager.register_stu(name, passwd, f_name, l_name)
+    # first-time tutor registration
     elif (method == MSG_TUT_ENTER):
         name   = msg_map[MSG_PARAM_USER_NAME]
         passwd = msg_map[MSG_PARAM_USER_PASSWD]
@@ -48,6 +50,12 @@ def msg_callback(ch, method, properties, body):
         l_name = msg_map[MSG_PARAM_USER_L_NAME]
         title  = msg_map[MSG_PARAM_USER_TITLE]
         queue_manager.register_tut(name, passwd, f_name, l_name, title)
+    # returning user login
+    elif (method == MSG_USER_ENTER): 
+        name   = msg_map[MSG_PARAM_USER_NAME]
+        passwd = msg_map[MSG_PARAM_USER_PASSWD]
+        queue_manager.login_user(name, passwd)
+    # user logs out
     elif (method == MSG_USER_LEAVE):
         uid = msg_map[MSG_PARAM_UID]
         queue_manager.deregister_user(uid)

@@ -88,6 +88,8 @@ class QueueManager:
         user = Student(rit_name, passwd, f_name, l_name)
         self.bunny.register(user)
         self.stu_queue.push(user)
+        # newly registered users should check the queue Student queue
+        self.__dispatch_tut()
         return user
 
     def register_tut(self, rit_name, passwd, f_name, l_name, title=""):
@@ -104,6 +106,24 @@ class QueueManager:
         self.bunny.register(user)
         self.tut_queue.add(user)
         # newly registered tutors should check the queue Student queue
+        self.__dispatch_tut()
+        return user
+
+    def login_user(self, user_name, passwd):
+        '''
+        Loads a user object from the DB; user logs into the system
+        :param: user User object being created
+        :return: User object added or None if failure
+        '''
+        # pull user from the DB
+        user = self.bunny.login(user_name, passwd)
+        # determine user type and add them to the correct queue
+
+        if (Tutor.is_tut(user)):
+            self.tut_queue.push(user)
+        elif (Student.is_stu(user)):
+            self.stu_queue.push(user)
+        # newly registered users should check the queue Student queue
         self.__dispatch_tut()
         return user
 
