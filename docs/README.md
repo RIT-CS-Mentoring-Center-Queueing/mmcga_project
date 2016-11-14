@@ -8,14 +8,5 @@ RabbitMQ server for message handling, using the Pika Python bindings for
 RabbitMQ. For more specific information about the server, read
 `server/README.md`
 
-### mmcga_server.sh
-Daemonized script that runs the project server as a headless system daemon/
-service.
-
-##### Usage:
-```shell
-./mmcga_server.sh (start | stop | restart)
-```
-
 ## Front End
 For more information, see ui/README.md
