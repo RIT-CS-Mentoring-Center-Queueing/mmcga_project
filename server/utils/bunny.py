@@ -351,6 +351,18 @@ class Bunny:
         if not(isinstance(user, User)):
             return None
         uid = User.get_uid(user)
+        # if the user is in the database...
+        json_map = self.__db_load_uname(user.name, DB_USER_TBL)
+        if (json_map != None):
+            # ...if we are in a debug mode, we ignore this issue for testing
+            if (DEBUG_MACRO or DEBUG_DB):
+                uid = json_map[DB_FIELD_UID]
+                user.uid = uid
+            # ...otherwise, don't let the user log in
+            else:
+                return None
+        print(uid)
+        print(user)
         # hash on the uid
         self.uid_tbl[uid] = user
         # TODO error checking before alerting the user of success
