@@ -14,7 +14,8 @@ import sys
 # project libraries
 from utils.macros import *
 from utils.utils import printd
-from utils.bunny import Bunny.parse_msg
+from utils.bunny import Bunny
+from queue_manager import QueueManager
 
 #### GLOBALS    ####
 

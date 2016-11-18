@@ -17,6 +17,8 @@ from datagrams.json_db_encoder import JSON_DB_Encoder
 from utils.macros import *
 from utils.utils import printd
 from users.user import User
+from users.student import Student
+from users.tutor import Tutor
 
 #### GLOBALS    ####
 
@@ -97,7 +99,7 @@ class Bunny:
         :return: Database connection object
         '''
         # connect to the database
-        if (DEBUG_MACRO):
+        if (DEBUG_DB):
             db_connect = sqlite3.connect(SQL_DB_DEBUG)
         else:
             db_connect = sqlite3.connect(SQL_DB)
@@ -236,6 +238,11 @@ class Bunny:
         )
         json_str = cur.fetchone()
         self.__db_disconnect(db_connect)
+        # failure to retrieve anything from the DB
+        if (json_str == None):
+            return None
+        # extract data out of tuple given to us
+        json_str = json_str[0]
         # remove ''s from SQL storage
         json_str = json_str.replace("''", "'")
         # it is now up to classes to know how to turn the map into an object
@@ -243,12 +250,21 @@ class Bunny:
 
     def __db_load_uid(self, uid, tbl):
         '''
-        Loads a JSON map from the a JSON string in the database
+        Loads a JSON map from the a JSON string in the database by UID
         :param: uid Value of the UID key to load
         :param: tbl Table to load from
         :return: JSON dictionary mappings from the database
         '''
         return self.__db_load(DB_FIELD_UID, uid, tbl)
+
+    def __db_load_uname(self, uname, tbl):
+        '''
+        Loads a JSON map from the a JSON string in the database by user name
+        :param: uname  Value of the user name key to load
+        :param: tbl Table to load from
+        :return: JSON dictionary mappings from the database
+        '''
+        return self.__db_load(DB_FIELD_UNAME, uname, tbl)
 
     def __db_store(self, key, key_val, tbl, obj, idx=None, idx_val=None):
         '''
@@ -279,7 +295,6 @@ class Bunny:
                     json=DB_FIELD_JSON, json_val=json_str,
                 )
             )
-            self.__db_disconnect(db_connect)
         # otherwise, insert for the first time
         else:
             # store object in the database
@@ -294,19 +309,22 @@ class Bunny:
                     json=DB_FIELD_JSON, json_val=json_str,
                 )
             )
-            self.__db_disconnect(db_connect)
-        # if these are set, set them in the row
+        # if an index value is specified, set them in the row only if the value
+        # is not new, don't bother updating it
         if ((idx != None) and (idx_val != None)):
-            cur = db_connect.execute(
-                """\
-                UPDATE {tbl_name}\
-                SET {idx}='{idx_val}'\
-                WHERE {key}='{key_val}';\
-                """.format(
-                    tbl_name=tbl,
-                    idx=idx, idx_val=idx_val,
+            if not(self.__db_lookup(idx, idx_val, tbl)):
+                cur = db_connect.execute(
+                    """\
+                    UPDATE {tbl_name}\
+                    SET {idx}='{idx_val}'\
+                    WHERE {key}='{key_val}';\
+                    """.format(
+                        tbl_name=tbl,
+                        idx=idx, idx_val=idx_val,
+                        key=key, key_val=key_val,
+                    )
                 )
-            )
+        self.__db_disconnect(db_connect)
         return json_str
 
     def __db_store_uid(self, uid, tbl, obj, idx=None, idx_val=None):
@@ -338,7 +356,8 @@ class Bunny:
         # TODO error checking before alerting the user of success
         # check for duplicates
         # register user with DB
-        self.__db_store_uid(uid, DB_USER_TBL, user)
+        self.__db_store_uid(uid, DB_USER_TBL, user, idx=DB_FIELD_UNAME,
+            idx_val=user.name)
         # send a message so that the client can pick up their UID
         var_tbl = {}
         var_tbl[MSG_PARAM_METHOD] = MSG_USER_ENTER
@@ -353,13 +372,13 @@ class Bunny:
         :param: user User object being created
         :return: User object added or None if failure
         '''
-        # attempt to load the user_name from the DB
-        json_map = self.__db_load(self, key, key_val, tbl)
+        # attempt to load the user_name from the DB user table
+        json_map = self.__db_load_uname(user_name, DB_USER_TBL)
 
         # if there are login failures, alert the user and return None
         var_tbl = {}
         var_tbl[MSG_PARAM_METHOD] = MSG_ERR_USER_LOGIN
-        var_tbl[MSG_PARAM_USER_NAME] = user.name
+        var_tbl[MSG_PARAM_USER_NAME] = user_name
         if (json_map == None):
             self.__send_msg(UID_BOOTSTRAP_QUEUE, var_tbl)
             return None

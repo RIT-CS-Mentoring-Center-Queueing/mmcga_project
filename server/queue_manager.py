@@ -59,7 +59,7 @@ class QueueManager:
         :return: Tutor dispatched or None if there isn't one
         '''
         # check if there is a tutor available to dispatch
-        if not(self.tut_queue.is_empty() and self.stu_queue.is_empty()):
+        if not(self.tut_queue.is_empty() or self.stu_queue.is_empty()):
             # get the UID of the next available tutor and user
             tut_uid = self.tut_queue.next()
             stu_uid = self.stu_queue.pop()
@@ -118,11 +118,10 @@ class QueueManager:
         # pull user from the DB
         user = self.bunny.login(user_name, passwd)
         # determine user type and add them to the correct queue
-
-        if (Tutor.is_tut(user)):
-            self.tut_queue.push(user)
-        elif (Student.is_stu(user)):
+        if (Student.is_stu(user)):
             self.stu_queue.push(user)
+        elif (Tutor.is_tut(user)):
+            self.tut_queue.add(user)
         # newly registered users should check the queue Student queue
         self.__dispatch_tut()
         return user
@@ -174,8 +173,8 @@ def main():
     qm = QueueManager()
     # Register operations; with "random" ordering
     print("##### Register commands #####")
-    tut0 = qm.register_tut("tut0001", "pass", "Tutor", "A", "SLI")
-    stu0 = qm.register_stu("aic4242", "pass", "Alice", "in Chains")
+    tut0 = qm.register_tut("tut0001", "pass", "tutor", "a", "sli")
+    stu0 = qm.register_stu("aic4242", "pass", "alice", "in chains")
     stu1 = qm.register_stu("bob8888", "pass", "Bob", "Man")
     tut1 = qm.register_tut("tut0002", "pass", "Tutor", "B", "TA")
     stu2 = qm.register_stu("exo6666", "xkcd", "Evil", "Oscar")
@@ -194,8 +193,25 @@ def main():
     print(stu0 == qm.deregister_user(stu0))
     print(stu4 == qm.deregister_user(stu4))
     print(stu5 == qm.deregister_user(stu5))
+    # double free
     print(None == qm.deregister_user(stu5))
     print(qm)
+
+    # attempt a few logins with some users
+    print("##### Login commands #####")
+    print(tut0 == qm.login_user("tut0001", "pass"))
+    print(stu0 == qm.login_user("aic4242", "pass"))
+    # bad password
+    print(None == qm.login_user("bob8888", "not_pass"))
+    # invalid user
+    print(None == qm.login_user("zxy9999", "pass"))
+    print(qm)
+    # clean-up
+    print(qm.deregister_user(tut0))
+    print(qm.deregister_user(stu0))
+    #print(tut0 == qm.deregister_user(tut0))
+    #print(stu0 == qm.deregister_user(stu0))
+
 
 if __name__ == "__main__":
     main()

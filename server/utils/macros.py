@@ -9,7 +9,9 @@
 #### GLOBALS    ####
 
 # Enables extended debug printing
-DEBUG_MACRO = True
+DEBUG_MACRO = False
+# Debug flag for database debugging; uses a different SQLite file
+DEBUG_DB = True
 
 # Host name of the server
 SERVER_HOST = "localhost"
