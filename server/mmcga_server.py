@@ -18,6 +18,9 @@ from utils.bunny import Bunny
 from queue_manager import QueueManager
 
 #### GLOBALS    ####
+# high-level interface for server interactions
+# this needs to be global for the callback function
+queue_manager = None
 
 #### FUNCTIONS  ####
 
