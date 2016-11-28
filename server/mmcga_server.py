@@ -20,7 +20,7 @@ from queue_manager import QueueManager
 #### GLOBALS    ####
 # high-level interface for server interactions
 # this needs to be global for the callback function
-queue_manager = None
+queue_manager = QueueManager()
 
 #### FUNCTIONS  ####
 
@@ -86,7 +86,6 @@ def main():
 
     # establish connection to server
     print("+ Starting MMCGA Server...")
-    queue_manager = QueueManager()
     socket = pika.BlockingConnection(pika.ConnectionParameters(SERVER_HOST))
     channel = socket.channel()
     # send information to a specific RabbitMQ queue; building this queue for
