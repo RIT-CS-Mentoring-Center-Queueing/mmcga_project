@@ -1,0 +1,231 @@
+
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    background-color: black;
+    background-attachment:fixed;
+    font-size:12px;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    width:100%;
+}
+
+
+.titleBar {
+	width: 100%;
+	background: #F36E21;
+	height: 50px;
+}
+
+.title {
+	text-align:center;
+	background: #F36E21;
+	color: white;
+	font-weight: bold;
+	font-family: "Times New Roman", Times, serif;
+	padding-top: 10px;
+}
+
+
+a {
+  text-decoration: none;
+  color: #1ab188;
+  -webkit-transition: .5s ease;
+  transition: .5s ease;
+}
+a:hover {
+  color: #179b77;
+}
+
+
+.tab-group {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 40px 0;
+}
+.tab-group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.tab-group li a {
+  display: block;
+  text-decoration: none;
+  background: rgba(160, 179, 176, 0.25);
+  color: #a0b3b0;
+  font-size: 20px;
+  float: left;
+  width: 50%;
+  text-align: center;
+  cursor: pointer;
+  -webkit-transition: .5s ease;
+  transition: .5s ease;
+  height: 30px;
+  padding-top: 10px;
+}
+.tab-group li a:hover {
+  background: #179b77;
+  color: #ffffff;
+}
+.tab-group .active a {
+  background: #1ab188;
+  color: #ffffff;
+}
+
+.tab-content > div:last-child {
+  display: none;
+}
+
+.tab-content {
+	width: 100%;
+}
+
+label {
+  position: absolute;
+  -webkit-transform: translateY(6px);
+          transform: translateY(6px);
+  left: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+  font-size: 22px;
+}
+label .req {
+  margin: 2px;
+  color: #1ab188;
+}
+
+label.active {
+  -webkit-transform: translateY(50px);
+          transform: translateY(50px);
+  left: 2px;
+  font-size: 14px;
+}
+label.active .req {
+  opacity: 0;
+}
+
+label.highlight {
+  color: #ffffff;
+}
+
+select.highlight {
+  color: #ffffff;
+}
+
+input, textarea {
+  font-size: 22px;
+  display: block;
+  width: 99%;
+  height: 100%;
+  padding: 5px 0px;
+  background: none;
+  background-image: none;
+  border: 1px solid #a0b3b0;
+  color: #ffffff;
+  border-radius: 0;
+  -webkit-transition: border-color .25s ease, box-shadow .25s ease;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+input:focus, textarea:focus {
+  outline: 0;
+  border-color: #1ab188;
+}
+
+textarea {
+  border: 2px solid #a0b3b0;
+  resize: vertical;
+}
+
+.field-wrap {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.top-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.top-row > div {
+  float: left;
+  width: 48%;
+  margin-right: 4%;
+}
+.top-row > div:last-child {
+  margin: 0;
+}
+
+.button {
+  border: 0;
+  outline: none;
+  border-radius: 0;
+  padding: 15px 0;
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  background: #1ab188;
+  color: #ffffff;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  -webkit-appearance: none;
+  position: relative;
+}
+.button:hover, .button:focus {
+  background: #179b77;
+}
+
+.button-block {
+  display: block;
+  width: 100%;
+}
+
+.forgot {
+  margin-top: -20px;
+  text-align: right;
+}
+
+.forgotPassText {
+  margin-top: -20px;
+  text-align: right;
+  font-size: 20px;
+}
+
+#headingText {
+	color: #ccc;
+    font-family: initial;
+	text-align: center;
+}
+
+.login-dropdown{
+	width: 99%;
+	height: 100%;
+	background: transparent;
+    background-image: none;
+    border: 1px solid #a0b3b0;
+	padding: 6px 0px;
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: "Times New Roman", Times, serif;
+}
+
+.login-dropdown-option {
+	background: black;
+}
+
+.lastName-width {
+	width: 98%;
+}
+
+#question {
+	height: 100px;
+}
