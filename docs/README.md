@@ -11,12 +11,14 @@ RabbitMQ. For more specific information about the server, read
 ## Front End
 For more information, see `ui/README.md`
 
-## Files in this Directory
+## About this directory
 
-#### board_drawings/
+### board_drawings/
 These are pictures of diagrams we have made on the board. Most of these come
 out of our initial thought process.
 
-#### MMCGA_System_Architecture_Diagram.pdf
-This PDF provides an overview of the system architecture, primarily from the
-back end's point of view.
+### diagrams/
+This directory contains various diagrams regarding the system design.
+
+### presentations/
+This directory contains various presentations regarding the system design.
