@@ -31,7 +31,7 @@ fi
 # start our python server/request handling system that reads off of queues
 # managed by the RabbitMQ server
 if [ "$1" = "start" ]; then
-    /usr/bin/python3 server/mmcga_server.py
+    /usr/local/bin/python3 server/mmcga_server.py
     # Testing: I don't want RabbitMQ running on my box all the time
     ./server/utils/rmq.sh "stop"
 fi
